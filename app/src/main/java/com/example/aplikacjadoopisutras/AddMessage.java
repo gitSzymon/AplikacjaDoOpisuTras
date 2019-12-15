@@ -1,10 +1,12 @@
 package com.example.aplikacjadoopisutras;
 
 import androidx.appcompat.app.AppCompatActivity;
+import logic.DatabaseClient;
 import logic.Description;
 import logic.Route;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -40,11 +42,28 @@ public class AddMessage extends AppCompatActivity {
 
     public void onClickBtnCancel(View view){
 
-        Description description = new Description(1, txtMessage.getText().toString());
-       // Toast.makeText(getApplicationContext(), description.toString(), Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        if (txtMessage.getText().toString().trim().isEmpty()) {
+            txtMessage.setError("Nie dodałeś żadnej notatki!!!");
+            txtMessage.requestFocus();
+            return;
+        }
 
-        Route.addPoint(description);
-        startActivity(intent);
+        class SaveDescription extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Description description = new Description(MainActivity.gpsX, MainActivity.gpsY ,txtMessage.getText().toString().trim()); //utworzenie obiektu
+                DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().insert(description);     //dodanie punktu do bazy
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity
+                startActivity(intent);
+
+                return null;
+            }
+
+        }
+
+        SaveDescription sd = new SaveDescription();
+        sd.execute();
     }
 }

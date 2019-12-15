@@ -2,23 +2,32 @@ package logic;
 
 import java.util.Date;
 
+import androidx.room.ColumnInfo;
+import androidx.room.PrimaryKey;
+
 public abstract class Point {
+    @PrimaryKey(autoGenerate = true)
+    //@ColumnInfo(name = "PointId")
     int pointId;    //identyfikator punktu
-    Date date;
+  //  @ColumnInfo(name = "Date")
+  //  Date date;
+    @ColumnInfo(name = "gpsX")
     double gpsX;    //współrzędna X lokalizacji
+    @ColumnInfo(name = "gpsY")
     double gpsY;    //współrzędna Y lokalizacji
 
-    public Point(int pointId) {
-        this.pointId = pointId;
+    public Point(double gpsX, double gpsY) {
         long timestamp = System.currentTimeMillis();
-        date = new Date(timestamp);
+       // date = new Date(timestamp);
+        this.gpsX = gpsX;
+        this.gpsY = gpsY;
     }
 
     @Override
     public String toString() {
         return "Point{" +
                 "pointId=" + pointId +
-                ", date=" + date +
+                //", date=" + date +
                 ", gpsX=" + gpsX +
                 ", gpsY=" + gpsY +
                 '}';

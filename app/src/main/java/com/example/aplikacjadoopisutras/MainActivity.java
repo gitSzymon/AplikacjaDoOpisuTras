@@ -10,11 +10,15 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     public Description description1;
     public Photo photo1;
     public VoiceMessage voiceMessage1;
-    public double gpsX, gpsY;
+    public static double gpsX, gpsY;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         textMain = (TextView) findViewById(R.id.gps);
         textGpsX = (TextView) findViewById(R.id.textGpsX);
         textGpsY = (TextView) findViewById(R.id.textGpsY);
+        textMain.setMovementMethod(new ScrollingMovementMethod());          //ustawienie scrollowania
+
 
         LocationManager managerLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener listenerLocation = new LocationListener() {
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProviderDisabled(String s) {
 
             }
+
         };
 
 
@@ -88,11 +96,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickBtnPrintRoute(View view) {
-        StringBuilder tmp = new StringBuilder();
-        for(int i=0; i<Route.getPointArrayList().size(); i++){
-            tmp.append(Route.getPointArrayList().get(i).toString());
+
+        class GetDescription extends AsyncTask<Void, Void, List<Description>> {
+
+            @Override
+            protected List<Description> doInBackground(Void... voids) {
+                List<Description> descriptionsList = DatabaseClient
+                        .getInstance(getApplicationContext())
+                        .getAppDatabase()
+                        .userDao()
+                        .getDescriptions();
+                return descriptionsList;
+            }
+
+            @Override
+            protected void onPostExecute(List<Description> descriptionList) {
+                StringBuilder tmp = new StringBuilder();
+                super.onPostExecute(descriptionList);
+                for(int i=0; i<descriptionList.size(); i++){
+                    tmp.append(descriptionList.get(i).toString());
+                }
+                textMain.setText(tmp.toString());
+            }
         }
-        textMain.setText(tmp.toString());
+
+        GetDescription gd = new GetDescription();
+        gd.execute();
     }
 
     public void onClickBtnAddText(View view) {

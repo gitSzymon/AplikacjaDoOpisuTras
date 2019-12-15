@@ -4,8 +4,9 @@ public class Photo extends Point {
 
     String fileName;
 
-    public Photo(int pointId, String fileName) {
-        super(pointId);
+
+    public Photo(double gpsX, double gpsY, String fileName) {
+        super(gpsX, gpsY);
         this.fileName = fileName;
     }
 
@@ -14,7 +15,7 @@ public class Photo extends Point {
         return "Photo{" +
                 "fileName='" + fileName + '\'' +
                 ", pointId=" + pointId +
-                ", date=" + date +
+                //", date=" + date +
                 '}';
     }
 

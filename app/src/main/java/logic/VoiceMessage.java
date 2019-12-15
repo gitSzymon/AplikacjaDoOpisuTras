@@ -4,8 +4,8 @@ public class VoiceMessage extends Point {
 
     String fileName;
 
-    public VoiceMessage(int pointId, String fileName) {
-        super(pointId);
+    public VoiceMessage(double gpsX, double gpsY, String fileName) {
+        super(gpsX, gpsY);
         this.fileName = fileName;
     }
 
@@ -14,7 +14,7 @@ public class VoiceMessage extends Point {
         return "VoiceMessage{" +
                 "fileName='" + fileName + '\'' +
                 ", pointId=" + pointId +
-                ", date=" + date +
+               // ", date=" + date +
                 '}';
     }
 
