@@ -8,6 +8,7 @@ import logic.Route;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -54,6 +55,11 @@ public class AddMessage extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
                 Description description = new Description(MainActivity.gpsX, MainActivity.gpsY ,txtMessage.getText().toString().trim()); //utworzenie obiektu
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().insert(description);     //dodanie punktu do bazy
+
+               // Intent intent = new Intent(getApplicationContext(), OneDescriptionActivity.class);        //powrót do MainActivity
+               // intent.putExtra("id", 10);
+               // startActivity(intent);
+
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity
                 startActivity(intent);

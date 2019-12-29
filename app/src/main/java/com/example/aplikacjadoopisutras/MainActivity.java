@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textMain;
     private TextView textGpsX, textGpsY;
+    private Button addPhoto;
 
     public Description description1;
     public Photo photo1;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         textGpsX = (TextView) findViewById(R.id.textGpsX);
         textGpsY = (TextView) findViewById(R.id.textGpsY);
         textMain.setMovementMethod(new ScrollingMovementMethod());          //ustawienie scrollowania
-
+        addPhoto = (Button) findViewById(R.id.btnAddPhoto);
 
         LocationManager managerLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener listenerLocation = new LocationListener() {
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected List<Description> doInBackground(Void... voids) {
+                //odczytanie danych z bazy
                 List<Description> descriptionsList = DatabaseClient
                         .getInstance(getApplicationContext())
                         .getAppDatabase()
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(List<Description> descriptionList) {
+                //wpisanie danych z bazy do stringa i do UI
                 StringBuilder tmp = new StringBuilder();
                 super.onPostExecute(descriptionList);
                 for(int i=0; i<descriptionList.size(); i++){
@@ -130,11 +134,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickBtnAddVoiceText(View view) {
+        //wyświetlenie 13 elementu
+
+
 
     }
 
     public void onClickBtnAddPhoto(View view) {
 
-    }
+            addPhoto.setText("Usuń pierwszy element z bazy");       //tymczasowa funkcja klawisza
+
+            class DeleteDescription extends AsyncTask<Void, Void, Void> {
+
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    Description description =
+                            DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().getDescriptions().get(0);        //pierwszy punkt listy
+                    DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().delete(description);     //kasowanie ostatniego punktu
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity
+                    startActivity(intent);
+
+                    return null;
+                }
+
+            }
+
+            DeleteDescription dd = new DeleteDescription();
+            dd.execute();
+        }
 
 }
