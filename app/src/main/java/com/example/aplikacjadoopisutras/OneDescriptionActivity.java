@@ -93,7 +93,7 @@ public class OneDescriptionActivity extends AppCompatActivity {
             protected Void doInBackground(Void... voids) {
                 Double gpsX = Double.parseDouble(String.valueOf(gpsXText.getText()));
                 Double gpsY = Double.parseDouble(String.valueOf(gpsYText.getText()));
-                Description description = new Description(gpsX, gpsY, descriptionText.getText().toString().trim()); //utworzenie obiektu
+                Description description = new Description(gpsX, gpsY, descriptionText.getText().toString().trim(), MainActivity.currentRouteId); //utworzenie obiektu
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().update(description);     //edycja punktu
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity

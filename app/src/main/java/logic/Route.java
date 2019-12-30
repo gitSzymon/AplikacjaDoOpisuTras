@@ -39,6 +39,9 @@ public class Route {
         @Query("SELECT * FROM routes")
         List<Route> getRoutes();
 
+        @Query("SELECT routeId FROM routes WHERE routeName=:name")
+        int findRouteIdByName(String name);
+
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         long insert(Route route);
 

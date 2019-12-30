@@ -34,9 +34,10 @@ public class Description extends Point {
 
     }
 
-    public Description(double gpsX, double gpsY, String description) {
+    public Description(double gpsX, double gpsY, String description, int routeId) {
         super(gpsX, gpsY);
         this.description = description;
+        this.routeId = routeId;
     }
 
     public String getDescription() {
@@ -51,6 +52,7 @@ public class Description extends Point {
                 ", date=" + date +
                 ", gpsX=" + gpsX +
                 ", gpsY=" + gpsY +
+                ". routeId=" + routeId+
                 '}';
     }
 }

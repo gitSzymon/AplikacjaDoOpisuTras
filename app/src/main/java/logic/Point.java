@@ -13,8 +13,8 @@ public abstract class Point {
     int pointId;    //identyfikator punktu
     @ColumnInfo(name = "Date")
     Date date;
-   // @ColumnInfo(name = "routeId")
-//    int routeId;
+    @ColumnInfo(name = "routeId")
+    int routeId;
     @ColumnInfo(name = "gpsX")
     double gpsX;    //współrzędna X lokalizacji
     @ColumnInfo(name = "gpsY")
@@ -46,6 +46,7 @@ public abstract class Point {
                 ", date=" + date +
                 ", gpsX=" + gpsX +
                 ", gpsY=" + gpsY +
+                ", routeID" + routeId +
                 '}';
     }
 }

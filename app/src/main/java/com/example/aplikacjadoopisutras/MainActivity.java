@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textMain;
     private TextView textGpsX, textGpsY;
     private Button addPhoto;
+    public static int currentRouteId;
 
     public Description description1;
     public Photo photo1;
@@ -38,11 +39,15 @@ public class MainActivity extends AppCompatActivity {
     public static double gpsX, gpsY;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(getIntent().getExtras() != null) {
+            currentRouteId = getIntent().getExtras().getInt("routeId");
+        }
         //GPS//
         textMain = (TextView) findViewById(R.id.gps);
         textGpsX = (TextView) findViewById(R.id.textGpsX);
@@ -168,4 +173,11 @@ public class MainActivity extends AppCompatActivity {
             dd.execute();
         }
 
+    public int getCurrentRouteId() {
+        return currentRouteId;
+    }
+
+    public void setCurrentRouteId(int currentRouteId) {
+        this.currentRouteId = currentRouteId;
+    }
 }

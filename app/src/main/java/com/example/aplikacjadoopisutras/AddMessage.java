@@ -3,6 +3,7 @@ package com.example.aplikacjadoopisutras;
 import androidx.appcompat.app.AppCompatActivity;
 import logic.DatabaseClient;
 import logic.Description;
+import logic.Point;
 import logic.Route;
 
 import android.content.Intent;
@@ -53,7 +54,8 @@ public class AddMessage extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                Description description = new Description(MainActivity.gpsX, MainActivity.gpsY ,txtMessage.getText().toString().trim()); //utworzenie obiektu
+                int tmpRouteId = MainActivity.currentRouteId;
+                Description description = new Description(MainActivity.gpsX, MainActivity.gpsY ,txtMessage.getText().toString().trim(), tmpRouteId); //utworzenie obiektu
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().insert(description);     //dodanie punktu do bazy
 
                 // Intent intent = new Intent(getApplicationContext(), OneDescriptionActivity.class);        //powrót do MainActivity

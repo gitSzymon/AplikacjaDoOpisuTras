@@ -38,10 +38,13 @@ public class CreateRouteActivity extends AppCompatActivity {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                Route route = new Route(routeName.getText().toString().trim()); //utworzenie obiektu
+                String name = routeName.getText().toString().trim();
+                Route route = new Route(name); //utworzenie obiektu
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().insert(route);     //dodanie punktu do bazy
+                int tmpName = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().findRouteIdByName(name);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity
+                intent.putExtra("routeId", tmpName);
                 startActivity(intent);
 
                 return null;
