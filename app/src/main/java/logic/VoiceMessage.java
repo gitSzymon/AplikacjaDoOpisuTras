@@ -45,7 +45,7 @@ public class VoiceMessage extends Point {
         return "VoiceMessage{" +
                 "fileName='" + fileName + '\'' +
                 ", pointId=" + pointId +
-               // ", date=" + date +
+                ", date=" + date +
                 '}';
     }
 

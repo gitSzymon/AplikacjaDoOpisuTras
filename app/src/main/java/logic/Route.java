@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.room.ColumnInfo;
@@ -23,13 +24,18 @@ public class Route {
     private static ArrayList<Double> track = new ArrayList<>();                //ślad trasy (na razie tylko współrzędnych X)
     @ColumnInfo(name = "routeName")
     String routeName;
+    @ColumnInfo(name = "date")
+    Date date;
+
 
     public Route(String routeName) {
+        long timestamp = System.currentTimeMillis();
+        date = new Date(timestamp);
         this.routeName = routeName;
     }
 
     @Dao
-    public interface RouteDao{
+    public interface RouteDao {
         @Query("SELECT * FROM routes")
         List<Route> getRoutes();
 
@@ -55,26 +61,26 @@ public class Route {
     @Override
     public String toString() {
         String tmp;
-        tmp =   "Route{";
-        for(int i=0; i<pointArrayList.size(); i++){
+        tmp = "Route{";
+        for (int i = 0; i < pointArrayList.size(); i++) {
             tmp += pointArrayList.toString();
         }
-   //             "placesArrayList=" + placesArrayList +
-   //             ", track=" + track +
-   //             ", routeName='" + routeName + '\'' +
-   //             '}';
+        //             "placesArrayList=" + placesArrayList +
+        //             ", track=" + track +
+        //             ", routeName='" + routeName + '\'' +
+        //             '}';
         return tmp;
     }
 
-    public static void addPoint(Point point){
+    public static void addPoint(Point point) {
         pointArrayList.add(point);
     }
 
-    public static void removePoint(Point point){
+    public static void removePoint(Point point) {
         pointArrayList.remove(point);
     }
 
-    public static void addGpsPoint(Double gpsPoint){
+    public static void addGpsPoint(Double gpsPoint) {
         track.add(gpsPoint);
     }
 

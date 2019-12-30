@@ -3,11 +3,13 @@ package logic;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 @Database(entities = {Description.class, Route.class, Photo.class, VoiceMessage.class}, version = 1)
+@TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
         private static Database INSTANCE;

@@ -11,8 +11,8 @@ public abstract class Point {
     @PrimaryKey(autoGenerate = true)
    // @ColumnInfo(name = "PointId")
     int pointId;    //identyfikator punktu
-  //  @ColumnInfo(name = "Date")
-  //  Date date;
+    @ColumnInfo(name = "Date")
+    Date date;
    // @ColumnInfo(name = "routeId")
 //    int routeId;
     @ColumnInfo(name = "gpsX")
@@ -22,7 +22,7 @@ public abstract class Point {
 
     public Point(double gpsX, double gpsY) {
         long timestamp = System.currentTimeMillis();
-       // date = new Date(timestamp);
+        date = new Date(timestamp);
         this.gpsX = gpsX;
         this.gpsY = gpsY;
     }
@@ -43,7 +43,7 @@ public abstract class Point {
     public String toString() {
         return "Point{" +
                 "pointId=" + pointId +
-                //", date=" + date +
+                ", date=" + date +
                 ", gpsX=" + gpsX +
                 ", gpsY=" + gpsY +
                 '}';

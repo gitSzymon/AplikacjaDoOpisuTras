@@ -45,7 +45,7 @@ public class Photo extends Point {
         return "Photo{" +
                 "fileName='" + fileName + '\'' +
                 ", pointId=" + pointId +
-                //", date=" + date +
+                ", date=" + date +
                 '}';
     }
 

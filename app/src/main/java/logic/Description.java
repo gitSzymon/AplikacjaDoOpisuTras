@@ -48,7 +48,7 @@ public class Description extends Point {
         return "Description{" +
                 "description='" + description + '\'' +
                 ", pointId=" + pointId +
-               // ", date=" + date +
+                ", date=" + date +
                 ", gpsX=" + gpsX +
                 ", gpsY=" + gpsY +
                 '}';
