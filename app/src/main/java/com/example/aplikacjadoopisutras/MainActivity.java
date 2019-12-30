@@ -1,6 +1,8 @@
 package com.example.aplikacjadoopisutras;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import logic.*;
 
 import android.Manifest;
@@ -16,9 +18,11 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         LocationManager managerLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener listenerLocation = new LocationListener() {
+
+
             @Override
             public void onLocationChanged(Location location) {
                 gpsX = location.getLatitude();
@@ -70,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProviderDisabled(String s) {
 
             }
+
 
         };
 
@@ -134,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickBtnAddVoiceText(View view) {
-        //wyświetlenie 13 elementu
 
-
+        Intent intent = new Intent(getApplicationContext(), PointListActivity.class);
+        startActivity(intent);
 
     }
 

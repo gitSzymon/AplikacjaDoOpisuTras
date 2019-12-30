@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".AddMessage"></activity>
         <activity android:name=".OneDescriptionActivity"></activity>
+        <activity android:name=".PointListActivity"></activity>
     </application>
 
 </manifest>
