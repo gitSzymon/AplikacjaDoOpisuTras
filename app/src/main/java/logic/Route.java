@@ -1,10 +1,17 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.room.ColumnInfo;
+import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Entity;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.PrimaryKey;
+import androidx.room.Query;
+import androidx.room.Update;
 
 
 @Entity(tableName = "routes")
@@ -15,10 +22,30 @@ public class Route {
     private static ArrayList<Point> pointArrayList = new ArrayList<>();       //Arraylista miejsc
     private static ArrayList<Double> track = new ArrayList<>();                //ślad trasy (na razie tylko współrzędnych X)
     @ColumnInfo(name = "routeName")
-    private static String routeName;
+    String routeName;
 
-    public static void setRouteName(String routeName) {
-        Route.routeName = routeName;
+    public Route(String routeName) {
+        this.routeName = routeName;
+    }
+
+    @Dao
+    public interface RouteDao{
+        @Query("SELECT * FROM routes")
+        List<Route> getRoutes();
+
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        long insert(Route route);
+
+        @Update
+        void update(Route route);
+
+        @Delete()
+        void delete(Route route);
+
+    }
+
+    public void setRouteName(String routeName) {
+        routeName = routeName;
     }
 
     public static ArrayList<Point> getPointArrayList() {

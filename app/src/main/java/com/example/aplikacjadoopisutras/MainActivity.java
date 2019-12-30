@@ -99,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
         // Get View reference
         // mText = (TextView) findViewById(R.id.text);
 
-
-
-        Route.setRouteName("trasa 1");
     }
 
     public void onClickBtnPrintRoute(View view) {
