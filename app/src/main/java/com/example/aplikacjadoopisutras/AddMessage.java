@@ -56,9 +56,9 @@ public class AddMessage extends AppCompatActivity {
                 Description description = new Description(MainActivity.gpsX, MainActivity.gpsY ,txtMessage.getText().toString().trim()); //utworzenie obiektu
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().userDao().insert(description);     //dodanie punktu do bazy
 
-               // Intent intent = new Intent(getApplicationContext(), OneDescriptionActivity.class);        //powrót do MainActivity
-               // intent.putExtra("id", 10);
-               // startActivity(intent);
+                // Intent intent = new Intent(getApplicationContext(), OneDescriptionActivity.class);        //powrót do MainActivity
+                // intent.putExtra("id", 10);
+                // startActivity(intent);
 
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity

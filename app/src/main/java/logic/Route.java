@@ -2,9 +2,19 @@ package logic;
 
 import java.util.ArrayList;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+
+@Entity(tableName = "routes")
 public class Route {
+
+    @PrimaryKey(autoGenerate = true)
+    int routeId;
     private static ArrayList<Point> pointArrayList = new ArrayList<>();       //Arraylista miejsc
     private static ArrayList<Double> track = new ArrayList<>();                //ślad trasy (na razie tylko współrzędnych X)
+    @ColumnInfo(name = "routeName")
     private static String routeName;
 
     public static void setRouteName(String routeName) {

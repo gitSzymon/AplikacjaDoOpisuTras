@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Aplikacja do opisu tras</string>
+    <string name="txt_rozpocznij_trase">Rozpocznij trase</string>
+
 </resources>

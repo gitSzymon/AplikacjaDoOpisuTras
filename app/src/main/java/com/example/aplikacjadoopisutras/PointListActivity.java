@@ -67,4 +67,3 @@ public class PointListActivity extends AppCompatActivity implements PointListAda
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 }
-
