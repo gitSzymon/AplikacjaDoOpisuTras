@@ -51,7 +51,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tvAnimalName);
+            myTextView = itemView.findViewById(R.id.one_point);
             itemView.setOnClickListener(this);
         }
 
