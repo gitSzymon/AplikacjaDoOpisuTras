@@ -1,6 +1,7 @@
 package com.example.aplikacjadoopisutras;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import logic.*;
@@ -12,8 +13,11 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +26,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -38,14 +46,16 @@ public class MainActivity extends AppCompatActivity {
     public VoiceMessage voiceMessage1;
     public static double gpsX, gpsY;
 
-
+    String currentImagePath = null;
+    private static final int IMAGE_REQUEST = 1; //camera intent
+    File imageFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(getIntent().getExtras() != null) {
+        if (getIntent().getExtras() != null) {
             currentRouteId = getIntent().getExtras().getInt("routeId");
         }
         //GPS//
@@ -126,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 //wpisanie danych z bazy do stringa i do UI
                 StringBuilder tmp = new StringBuilder();
                 super.onPostExecute(descriptionList);
-                for(int i=0; i<descriptionList.size(); i++){
+                for (int i = 0; i < descriptionList.size(); i++) {
                     tmp.append(descriptionList.get(i).toString());
                 }
                 textMain.setText(tmp.toString());
@@ -151,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickBtnAddPhoto(View view) {
 
-            addPhoto.setText("Usuń pierwszy element z bazy");       //tymczasowa funkcja klawisza
+      /*      addPhoto.setText("Usuń pierwszy element z bazy");       //tymczasowa funkcja klawisza
 
             class DeleteDescription extends AsyncTask<Void, Void, Void> {
 
@@ -171,7 +181,53 @@ public class MainActivity extends AppCompatActivity {
 
             DeleteDescription dd = new DeleteDescription();
             dd.execute();
+
+       */
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                imageFile = getImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (imageFile != null) {
+                Uri imageUri = FileProvider.getUriForFile(this, "android.support.v4.content.FileProvider", imageFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(cameraIntent, IMAGE_REQUEST);
+            }
         }
+    }
+
+    //metoda odpowiedzialna za nazwę pliku do zapisu
+    private File getImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMDD_HHmmss").format(new Date());
+        String imageName = "jpg_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir((Environment.DIRECTORY_PICTURES));
+        File imageFile = File.createTempFile(imageName, ".jpg", storageDir);
+        currentImagePath = imageFile.getAbsolutePath();
+        return imageFile;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // po powrotach z activity np. aparat
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
+            if (resultCode == RESULT_OK) {
+                //utworzenie obiektu photo i zapisanie do bazy
+                Photo photo = new Photo(MainActivity.gpsX, MainActivity.gpsY, imageFile.getName());
+                //zapis do Bazy w inny wątku
+                //  DatabaseClient.SavePhotoToDB save = new DatabaseClient.SavePhotoToDB();
+             //   DatabaseClient.savePhotoToDB.setPhoto(photo);
+             //   DatabaseClient.savePhotoToDB.execute();
+
+                Toast.makeText(getApplicationContext(), "Sukces", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "Anulowano", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     public int getCurrentRouteId() {
         return currentRouteId;

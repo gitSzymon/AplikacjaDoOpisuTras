@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +29,17 @@
         <activity android:name=".PointListActivity"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".CreateRouteActivity"></activity>
+
+        <provider
+            android:authorities="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/path_name" />
+        </provider>
+
     </application>
 
 </manifest>
