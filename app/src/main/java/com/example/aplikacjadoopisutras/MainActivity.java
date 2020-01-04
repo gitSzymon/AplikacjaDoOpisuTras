@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(cameraIntent, IMAGE_REQUEST);
             }
         }
+
     }
 
     //metoda odpowiedzialna za nazwę pliku do zapisu
@@ -216,11 +217,24 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
             if (resultCode == RESULT_OK) {
                 //utworzenie obiektu photo i zapisanie do bazy
-                Photo photo = new Photo(MainActivity.gpsX, MainActivity.gpsY, imageFile.getName());
+                final Photo photo = new Photo(MainActivity.gpsX, MainActivity.gpsY, imageFile.getName(), 1);
+
                 //zapis do Bazy w inny wątku
+                class SaveDescription extends AsyncTask<Void, Void, Void> {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        int tmpRouteId = MainActivity.currentRouteId;
+                        DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().photoDao().insert(photo);     //dodanie punktu do bazy
+                        return null;
+                    }
+                }
+
+                SaveDescription sd = new SaveDescription();
+                sd.execute();
+
                 //  DatabaseClient.SavePhotoToDB save = new DatabaseClient.SavePhotoToDB();
-             //   DatabaseClient.savePhotoToDB.setPhoto(photo);
-             //   DatabaseClient.savePhotoToDB.execute();
+                //   DatabaseClient.savePhotoToDB.setPhoto(photo);
+                //   DatabaseClient.savePhotoToDB.execute();
 
                 Toast.makeText(getApplicationContext(), "Sukces", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {

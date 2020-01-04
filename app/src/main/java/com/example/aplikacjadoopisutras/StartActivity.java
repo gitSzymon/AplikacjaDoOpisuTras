@@ -34,8 +34,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public void onClickBtnPrzegladTras(View view) {
-     //   Intent intent = new Intent(getApplicationContext(), StartActivity.class);
-     //   startActivity(intent);
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
     }
 
 }

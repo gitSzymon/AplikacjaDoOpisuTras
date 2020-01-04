@@ -22,7 +22,7 @@ public class Photo extends Point {
     @Dao
     public interface PhotoDao{
         @Query("SELECT * FROM photos")
-        List<VoiceMessage> getPhoto();
+        List<Photo> getPhoto();
 
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         long insert(Photo photo);
@@ -35,9 +35,10 @@ public class Photo extends Point {
 
     }
 
-    public Photo(double gpsX, double gpsY, String fileName) {
+    public Photo(double gpsX, double gpsY, String fileName, int routeId) {
         super(gpsX, gpsY);
         this.fileName = fileName;
+        this.routeId = routeId;
     }
 
     @Override

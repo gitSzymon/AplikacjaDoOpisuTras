@@ -29,6 +29,7 @@
         <activity android:name=".PointListActivity"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".CreateRouteActivity"></activity>
+        <activity android:name=".MapsActivity"></activity>
 
         <provider
             android:authorities="android.support.v4.content.FileProvider"
@@ -39,6 +40,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/path_name" />
         </provider>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBFSmtOX8dTUJHF5CdKY9q3o9g-c7h5ri8" />
 
     </application>
 
