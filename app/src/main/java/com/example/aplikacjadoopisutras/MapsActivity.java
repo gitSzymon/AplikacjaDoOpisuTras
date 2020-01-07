@@ -6,6 +6,7 @@ import logic.DatabaseClient;
 import logic.Description;
 import logic.Photo;
 import logic.Point;
+import logic.VoiceMessage;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -69,8 +70,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .photoDao()
                         .getPhoto();
 
+                List<VoiceMessage> voiceMessageList = DatabaseClient
+                        .getInstance(getApplicationContext())
+                        .getAppDatabase()
+                        .voiceMessageDao()
+                        .getVoiceMessages();
+
                 tmp.addAll(photoList);
                 tmp.addAll(descriptionsList);
+                tmp.addAll(voiceMessageList);
 
 
                 return tmp;
@@ -80,10 +88,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             protected void onPostExecute(ArrayList<Point> pointList) {
 
+                LatLng point = null;
+                float zoomLevel = (float)20.0;
                 super.onPostExecute(pointList);
                 // Add a markers
                 for (int i = 0; i < pointList.size(); i++) {
-                    LatLng point = new LatLng(pointList.get(i).getGpsX(), pointList.get(i).getGpsY());
+                    point = new LatLng(pointList.get(i).getGpsX(), pointList.get(i).getGpsY());
                     MarkerOptions marker = new MarkerOptions();
 
                     if (pointList.get(i) instanceof Description) {
@@ -92,11 +102,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     if (pointList.get(i) instanceof Photo) {
                         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                        mMap.addMarker(marker.position(point).title("Punkt " + i));
+                        mMap.addMarker(marker.position(point).title("Fotosek " + i));
+                    }
+                    if (pointList.get(i) instanceof VoiceMessage) {
+                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        mMap.addMarker(marker.position(point).title("Głosówka " + i));
                     }
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel));
             }
         }
 

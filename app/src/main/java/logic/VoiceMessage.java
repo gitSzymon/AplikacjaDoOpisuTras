@@ -35,9 +35,10 @@ public class VoiceMessage extends Point {
     }
 
 
-    public VoiceMessage(double gpsX, double gpsY, String fileName) {
+    public VoiceMessage(double gpsX, double gpsY, String fileName, int routeId) {
         super(gpsX, gpsY);
         this.fileName = fileName;
+        this.routeId = routeId;
     }
 
     @Override
