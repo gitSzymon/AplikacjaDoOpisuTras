@@ -52,10 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     String currentImagePath = null;
     private static final int IMAGE_REQUEST = 1; //camera intent
-    private static final int VOICE_REQUEST = 2; //voice recorder intent
     int MY_PERMISSIONS_RECORD_AUDIO = 3;
     File imageFile = null;
-    File voiceRecordFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,8 +163,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickBtnAddVoiceText(View view) {
 
-      //  Intent intent = new Intent(getApplicationContext(), PointListActivity.class);
-      //  startActivity(intent);
+        //Intent intent = new Intent(getApplicationContext(), PointListActivity.class);
+        //startActivity(intent);
+
+        Intent intent = new Intent(getApplicationContext(), VoiceMessageActivity.class);
+        startActivity(intent);
+
         /*
         Intent voiceRecorderIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
         if (voiceRecorderIntent.resolveActivity(getPackageManager()) != null) {
@@ -184,48 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
 */
 
-        final String LOG_TAG = "AudioRecordTest";
 
-        MediaRecorder recorder = null;
-
-        String fileName = getExternalCacheDir().getAbsolutePath();
-        fileName += "/hihi.mp3";
-
-
-        recorder = new MediaRecorder();
-        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-        recorder.setOutputFile(fileName);
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-
-
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
-        recorder.start();
-        Toast.makeText(getApplicationContext(), "Jaaaazda", Toast.LENGTH_SHORT).show();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        recorder.stop();
-        Toast.makeText(getApplicationContext(), "Konice", Toast.LENGTH_SHORT).show();
-
-
-    }
-
-    //metoda odpowiedzialna za nazwę pliku do zapisu
-    private File getVoiceRecordFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMDD_HHmmss").format(new Date());
-        String voiceMessageName = "3gp_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir((Environment.DIRECTORY_PICTURES));
-        File voiceMessageFile = File.createTempFile(voiceMessageName, ".3gp", storageDir);
-        currentImagePath = voiceMessageFile.getAbsolutePath();
-        return voiceMessageFile;
 
     }
 
@@ -273,18 +234,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Anulowano", Toast.LENGTH_SHORT).show();
             }
         }
-        if (requestCode == VOICE_REQUEST) { //powrót z dyktafonu
-            if (resultCode == RESULT_OK) {
-                //utworzenie obiektu voiceMessage i zapisanie do bazy
-                VoiceMessage voiceMessage = new VoiceMessage(MainActivity.gpsX, MainActivity.gpsY, voiceRecordFile.getName(), 1);
-                //zapis do Bazy w inny wątku
-                DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
 
-                Toast.makeText(getApplicationContext(), "Sukces", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), "Anulowano", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     public int getCurrentRouteId() {
