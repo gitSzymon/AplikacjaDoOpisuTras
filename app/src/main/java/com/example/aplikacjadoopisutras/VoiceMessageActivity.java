@@ -2,6 +2,7 @@ package com.example.aplikacjadoopisutras;
 
 import android.content.Intent;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import logic.DatabaseClient;
 import logic.Description;
@@ -31,25 +33,44 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
    // private TextView txtMessage;
 
+    private Button btnStart;
+    private Button btnPauza;
+    private Button btnStop;
+    //  txtMessage = (TextView)findViewById((R.id.txtMessage));
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_message);
 
-        Button btnStart = (Button)findViewById(R.id.btnStart);
-        Button btnPauza = (Button)findViewById(R.id.btnPauza);
-        Button btnStop = (Button)findViewById(R.id.btnStop);
-      //  txtMessage = (TextView)findViewById((R.id.txtMessage));
+        btnStart = (Button)findViewById(R.id.btnStart);
+        btnStop = (Button)findViewById(R.id.btnStop);
+        btnPauza = (Button)findViewById(R.id.btnPauza);
 
-        String fileName = getExternalCacheDir().getAbsolutePath();
-        fileName += "/hihi.mp3";
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
 
+        String fileName = getExternalFilesDir("").getAbsolutePath();
+        //fileName += "/hihi.mp3";
+
+
+        try {
+            fileName = getVoiceRecordFile().getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
         recorder.setOutputFile(fileName);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
 
 /*
         try {
@@ -73,28 +94,29 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
     public void onClickButtonStart(View view){
 
-
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
         recorder.start();
         Toast.makeText(getApplicationContext(), "Jaaaazda", Toast.LENGTH_SHORT).show();
-
+        btnStart.setEnabled(false);
+        btnStop.setEnabled(true);
     }
 
     public void onClickButtonPauza(View view){
 
-
-
     }
+
 
     public void onClickButtonStop(View view){
 
         recorder.stop();
+        recorder.reset();
+        recorder.release();
+        recorder = null;
+
+
         Toast.makeText(getApplicationContext(), "Koniec", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
 
     }
 
@@ -102,13 +124,11 @@ public class VoiceMessageActivity extends AppCompatActivity {
     //metoda odpowiedzialna za nazwę pliku do zapisu
     private File getVoiceRecordFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMDD_HHmmss").format(new Date());
-        String voiceMessageName = "3gp_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir((Environment.DIRECTORY_PICTURES));
-        File voiceMessageFile = File.createTempFile(voiceMessageName, ".3gp", storageDir);
-        currentImagePath = voiceMessageFile.getAbsolutePath();
+        String voiceMessageName = "mp3_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir((Environment.DIRECTORY_MUSIC));
+        File voiceMessageFile = File.createTempFile(voiceMessageName, ".mp3", storageDir);
+       // currentImagePath = voiceMessageFile.getAbsolutePath();
         return voiceMessageFile;
-
-
     }
 
     @Override

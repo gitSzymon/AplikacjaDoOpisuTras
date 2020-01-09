@@ -10,6 +10,7 @@ import logic.VoiceMessage;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,9 +24,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
+
+  //  private ArrayList<MarkerOptions> markers = new ArrayList<>();
+  //  private ArrayList<Point> points = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +42,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+       // Point a;
+       // a = (Description)(marker.getTag());
+        Toast.makeText(this, marker.getTag().toString(), Toast.LENGTH_SHORT).show();
+        return false;
+    }
 
     /**
      * Manipulates the map once available.
@@ -50,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        googleMap.setOnMarkerClickListener(this);
 
         class GetMapPoints extends AsyncTask<Void, Void, ArrayList<Point>> {
 
@@ -94,19 +109,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Add a markers
                 for (int i = 0; i < pointList.size(); i++) {
                     point = new LatLng(pointList.get(i).getGpsX(), pointList.get(i).getGpsY());
-                    MarkerOptions marker = new MarkerOptions();
+                    MarkerOptions markerOptions = new MarkerOptions();
+                  //  Marker marker;
 
                     if (pointList.get(i) instanceof Description) {
-                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                        mMap.addMarker(marker.position(point).title(((Description) pointList.get(i)).getDescription()));
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                        mMap.addMarker(markerOptions.position(point).title(((Description) pointList.get(i)).getDescription()));
+                      //  points.add(pointList.get(i));
+                      //  markers.add(marker);
+                       Marker marker = mMap.addMarker(markerOptions);
+                      //  marker.setTag((Description)pointList.get(i));
+                        marker.setTag(i);
                     }
                     if (pointList.get(i) instanceof Photo) {
-                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                        mMap.addMarker(marker.position(point).title("Fotosek " + i));
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        mMap.addMarker(markerOptions.position(point).title("Fotosek " + i));
+                        Marker marker = mMap.addMarker(markerOptions);
+                        marker.setTag((Point)pointList.get(i));
                     }
                     if (pointList.get(i) instanceof VoiceMessage) {
-                        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                        mMap.addMarker(marker.position(point).title("Głosówka " + i));
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        mMap.addMarker(markerOptions.position(point).title("Głosówka " + i));
+                        Marker marker = mMap.addMarker(markerOptions);
+                        marker.setTag((Point)pointList.get(i));
                     }
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
