@@ -46,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         if (p instanceof Photo) {
             Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
-            intent.putExtra( "fileName",  (Photo) p);
+            intent.putExtra( "fileName", (Photo) p);
             startActivity(intent);
 
         }

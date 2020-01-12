@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
             if (resultCode == RESULT_OK) {
                 //utworzenie obiektu photo i zapisanie do bazy
-                Photo photo = new Photo(MainActivity.gpsX, MainActivity.gpsY, imageFile.getName(), 1);
+                Photo photo = new Photo(MainActivity.gpsX, MainActivity.gpsY, currentImagePath, 1);
                 //zapis do Bazy w inny wątku
                 DatabaseClient.getInstance(getApplicationContext()).savePointToDb(photo);
 
