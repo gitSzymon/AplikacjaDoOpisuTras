@@ -27,11 +27,14 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
     private static final int VOICE_REQUEST = 2; //voice recorder intent
     String currentImagePath = null;
+    File voiceRecordFile = null;
+
 
     MediaRecorder recorder = null;
+    String fileName="";
     final String LOG_TAG = "AudioRecordTest";
 
-   // private TextView txtMessage;
+    // private TextView txtMessage;
 
     private Button btnStart;
     private Button btnPauza;
@@ -50,7 +53,7 @@ public class VoiceMessageActivity extends AppCompatActivity {
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
 
-        String fileName = getExternalFilesDir("").getAbsolutePath();
+        fileName = getExternalFilesDir("").getAbsolutePath();
         //fileName += "/hihi.mp3";
 
 
@@ -72,24 +75,6 @@ public class VoiceMessageActivity extends AppCompatActivity {
             Log.e(LOG_TAG, "prepare() failed");
         }
 
-/*
-        try {
-            recorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
-        recorder.start();
-        Toast.makeText(getApplicationContext(), "Jaaaazda", Toast.LENGTH_SHORT).show();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        recorder.stop();
-        Toast.makeText(getApplicationContext(), "Koniec", Toast.LENGTH_SHORT).show();
-
- */
     }
 
     public void onClickButtonStart(View view){
@@ -112,6 +97,10 @@ public class VoiceMessageActivity extends AppCompatActivity {
         recorder.release();
         recorder = null;
 
+        VoiceMessage voiceMessage = new VoiceMessage(MainActivity.gpsX, MainActivity.gpsY, fileName, 1);
+        //zapis do Bazy w inny wątku
+        DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
+
 
         Toast.makeText(getApplicationContext(), "Koniec", Toast.LENGTH_SHORT).show();
 
@@ -127,26 +116,9 @@ public class VoiceMessageActivity extends AppCompatActivity {
         String voiceMessageName = "mp3_" + timeStamp + "_";
         File storageDir = getExternalFilesDir((Environment.DIRECTORY_MUSIC));
         File voiceMessageFile = File.createTempFile(voiceMessageName, ".mp3", storageDir);
-       // currentImagePath = voiceMessageFile.getAbsolutePath();
+        // currentImagePath = voiceMessageFile.getAbsolutePath();
         return voiceMessageFile;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        File voiceRecordFile = null;
 
-        if (requestCode == VOICE_REQUEST) { //powrót z dyktafonu
-            if (resultCode == RESULT_OK) {
-                //utworzenie obiektu voiceMessage i zapisanie do bazy
-                VoiceMessage voiceMessage = new VoiceMessage(MainActivity.gpsX, MainActivity.gpsY, voiceRecordFile.getName(), 1);
-                //zapis do Bazy w inny wątku
-                DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
-
-                Toast.makeText(getApplicationContext(), "Sukces", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), "Anulowano", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }

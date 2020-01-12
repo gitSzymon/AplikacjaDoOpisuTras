@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ImageViewActivity"></activity>
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,17 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddMessage"></activity>
-        <activity android:name=".OneDescriptionActivity"></activity>
-        <activity android:name=".PointListActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".CreateRouteActivity"></activity>
-        <activity android:name=".MapsActivity"></activity>
-        <activity android:name=".VoiceMessageActivity"></activity>
+        <activity android:name=".AddMessage" />
+        <activity android:name=".OneDescriptionActivity" />
+        <activity android:name=".PointListActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".CreateRouteActivity" />
+        <activity android:name=".MapsActivity" />
+        <activity android:name=".VoiceMessageActivity" />
 
         <provider
-            android:authorities="android.support.v4.content.FileProvider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="android.support.v4.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -46,7 +47,6 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBFSmtOX8dTUJHF5CdKY9q3o9g-c7h5ri8" />
-
     </application>
 
 </manifest>

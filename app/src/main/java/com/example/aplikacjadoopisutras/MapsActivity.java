@@ -8,8 +8,11 @@ import logic.Photo;
 import logic.Point;
 import logic.VoiceMessage;
 
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,16 +24,49 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
+    private static final String LOG_TAG = "MapsActivity";
+
     private GoogleMap mMap;
+    private Marker marker;
+    private MediaPlayer player = null;
 
-  //  private ArrayList<MarkerOptions> markers = new ArrayList<>();
-  //  private ArrayList<Point> points = new ArrayList<>();
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Point p = (Point) marker.getTag();
+        String string = "";
+        if (p instanceof Description) {
+            string = ((Description) p).getDescription();
+        }
+        if (p instanceof Photo) {
+            Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
+            intent.putExtra( "fileName",  (Photo) p);
+            startActivity(intent);
+
+        }
+        if (p instanceof VoiceMessage) { //odtworzenie dzwięku
+            player = new MediaPlayer();
+            String fileName = ((VoiceMessage) p).getFileName();
+            try {
+                player.setDataSource(fileName);
+                player.prepare();
+                player.start();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "prepare() failed");
+            }
+            string = "Voice: gpsx=" + ((VoiceMessage) p).getGpsX() + " gpsy= " + ((VoiceMessage) p).getGpsY();
+        }
+
+
+        Toast.makeText(this, string, Toast.LENGTH_LONG).show();
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +76,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-
-       // Point a;
-       // a = (Description)(marker.getTag());
-        Toast.makeText(this, marker.getTag().toString(), Toast.LENGTH_SHORT).show();
-        return false;
-    }
 
     /**
      * Manipulates the map once available.
@@ -63,7 +92,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         googleMap.setOnMarkerClickListener(this);
 
         class GetMapPoints extends AsyncTask<Void, Void, ArrayList<Point>> {
@@ -104,39 +132,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             protected void onPostExecute(ArrayList<Point> pointList) {
 
                 LatLng point = null;
-                float zoomLevel = (float)20.0;
+                float zoomLevel = (float) 5.0;
                 super.onPostExecute(pointList);
                 // Add a markers
                 for (int i = 0; i < pointList.size(); i++) {
                     point = new LatLng(pointList.get(i).getGpsX(), pointList.get(i).getGpsY());
-                    MarkerOptions markerOptions = new MarkerOptions();
-                  //  Marker marker;
+                    MarkerOptions markerOpt = new MarkerOptions();
 
                     if (pointList.get(i) instanceof Description) {
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                        mMap.addMarker(markerOptions.position(point).title(((Description) pointList.get(i)).getDescription()));
-                      //  points.add(pointList.get(i));
-                      //  markers.add(marker);
-                       Marker marker = mMap.addMarker(markerOptions);
-                      //  marker.setTag((Description)pointList.get(i));
-                        marker.setTag(i);
+                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                        markerOpt.position(point).title(((Description) pointList.get(i)).getDescription());
                     }
                     if (pointList.get(i) instanceof Photo) {
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                        mMap.addMarker(markerOptions.position(point).title("Fotosek " + i));
-                        Marker marker = mMap.addMarker(markerOptions);
-                        marker.setTag((Point)pointList.get(i));
+                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        markerOpt.position(point).title("Fotosek " + i);
                     }
                     if (pointList.get(i) instanceof VoiceMessage) {
-                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                        mMap.addMarker(markerOptions.position(point).title("Głosówka " + i));
-                        Marker marker = mMap.addMarker(markerOptions);
-                        marker.setTag((Point)pointList.get(i));
+                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        markerOpt.position(point).title("Głosówka " + i);
                     }
 
+                    marker = mMap.addMarker(markerOpt);
+                    Point p = pointList.get(i);
+                    marker.setTag(p);
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel));
+                //          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); Nie działa na starym LG
             }
         }
 
@@ -144,5 +165,3 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getPoint.execute();
     }
 }
-
-

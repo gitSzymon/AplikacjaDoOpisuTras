@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey;
 
 public abstract class Point {
     @PrimaryKey(autoGenerate = true)
-   // @ColumnInfo(name = "PointId")
-    int pointId;    //identyfikator punktu
+    // @ColumnInfo(name = "PointId")
+            int pointId;    //identyfikator punktu
     @ColumnInfo(name = "Date")
     Date date;
     @ColumnInfo(name = "routeId")
@@ -27,9 +27,9 @@ public abstract class Point {
         this.gpsY = gpsY;
     }
 
-  //  public int getPointId() {
-  //      return pointId;
-  //  }
+    //  public int getPointId() {
+    //      return pointId;
+    //  }
 
     public double getGpsX() {
         return gpsX;

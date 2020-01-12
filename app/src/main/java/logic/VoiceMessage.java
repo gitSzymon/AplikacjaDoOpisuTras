@@ -41,6 +41,10 @@ public class VoiceMessage extends Point {
         this.routeId = routeId;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     @Override
     public String toString() {
         return "VoiceMessage{" +
