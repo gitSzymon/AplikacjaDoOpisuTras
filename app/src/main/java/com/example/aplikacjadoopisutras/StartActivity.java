@@ -19,8 +19,16 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        Intent intent = new Intent(this, LocationService.class);
+        stopService(intent);
+        super.onDestroy();
     }
 
     public void onClickBtnNowaTrasa(View view) {

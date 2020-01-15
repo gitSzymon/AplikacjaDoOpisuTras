@@ -132,7 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             protected void onPostExecute(ArrayList<Point> pointList) {
 
                 LatLng point = null;
-                float zoomLevel = (float) 5.0;
+                float zoomLevel = (float) 15.0;
                 super.onPostExecute(pointList);
                 // Add a markers
                 for (int i = 0; i < pointList.size(); i++) {
@@ -157,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     marker.setTag(p);
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
-                //          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); Nie działa na starym LG
+                          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); //Nie działa na starym LG
             }
         }
 

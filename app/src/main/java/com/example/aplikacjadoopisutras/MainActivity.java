@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import logic.*;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,6 +22,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -44,12 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView textGpsX, textGpsY;
     private Button addPhoto;
     public static int currentRouteId;
-
-    public Description description1;
-    public Photo photo1;
-    public VoiceMessage voiceMessage1;
+    private LocationService locationService;
     public static double gpsX, gpsY;
-
     String currentImagePath = null;
     private static final int IMAGE_REQUEST = 1; //camera intent
     int MY_PERMISSIONS_RECORD_AUDIO = 3;
@@ -70,52 +69,6 @@ public class MainActivity extends AppCompatActivity {
         textMain.setMovementMethod(new ScrollingMovementMethod());          //ustawienie scrollowania
         addPhoto = (Button) findViewById(R.id.btnAddPhoto);
 
-        LocationManager managerLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        LocationListener listenerLocation = new LocationListener() {
-
-
-            @Override
-            public void onLocationChanged(Location location) {
-                gpsX = location.getLatitude();
-                gpsY = location.getLongitude();
-                textGpsX.setText("x: " + location.getLatitude());                               //zaktualizowanie współrzędnych na ekranie
-                textGpsY.setText("y: " + location.getLongitude());
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-            }
-
-
-        };
-
-
-        //if((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) &&
-        //        (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)){
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
-            return;
-        }
-        managerLocation.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listenerLocation);
-
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO);
         }
@@ -123,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         // Get View reference
         // mText = (TextView) findViewById(R.id.text);
 
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void onClickBtnPrintRoute(View view) {
@@ -187,26 +142,32 @@ public class MainActivity extends AppCompatActivity {
 */
 
 
-
     }
 
     public void onClickBtnAddPhoto(View view) {
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-        try {
-            imageFile = getImageFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                imageFile = getImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (imageFile != null) {
+                Uri imageUri = FileProvider.getUriForFile(this, "android.support.v4.content.FileProvider", imageFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(cameraIntent, IMAGE_REQUEST);
+            }
         }
-        if (imageFile != null) {
-            Uri imageUri = FileProvider.getUriForFile(this, "android.support.v4.content.FileProvider", imageFile);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            startActivityForResult(cameraIntent, IMAGE_REQUEST);
-        }
+
     }
 
-}
+    public void onClickBtnUpdate(View view){
+
+        textGpsX.setText(Double.toString(locationService.getGpsX()));
+        textGpsY.setText(Double.toString(locationService.getGpsY()));
+
+    }
 
     //metoda odpowiedzialna za nazwę pliku do zapisu
     private File getImageFile() throws IOException {
@@ -225,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
             if (resultCode == RESULT_OK) {
                 //utworzenie obiektu photo i zapisanie do bazy
-                Photo photo = new Photo(MainActivity.gpsX, MainActivity.gpsY, currentImagePath, 1);
+                Photo photo = new Photo(locationService.getGpsX(), locationService.getGpsY(), currentImagePath, 1);
                 //zapis do Bazy w inny wątku
                 DatabaseClient.getInstance(getApplicationContext()).savePointToDb(photo);
 
@@ -237,6 +198,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LocationService.MyBinder binder = (LocationService.MyBinder) iBinder;
+            locationService = binder.getLocationService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            locationService = null;
+        }
+    };
+
     public int getCurrentRouteId() {
         return currentRouteId;
     }
@@ -244,4 +218,6 @@ public class MainActivity extends AppCompatActivity {
     public void setCurrentRouteId(int currentRouteId) {
         this.currentRouteId = currentRouteId;
     }
+
+
 }

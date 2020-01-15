@@ -1,10 +1,13 @@
 package com.example.aplikacjadoopisutras;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +32,7 @@ public class VoiceMessageActivity extends AppCompatActivity {
     String currentImagePath = null;
     File voiceRecordFile = null;
 
-
+    private LocationService locationService;
     MediaRecorder recorder = null;
     String fileName="";
     final String LOG_TAG = "AudioRecordTest";
@@ -97,7 +100,7 @@ public class VoiceMessageActivity extends AppCompatActivity {
         recorder.release();
         recorder = null;
 
-        VoiceMessage voiceMessage = new VoiceMessage(MainActivity.gpsX, MainActivity.gpsY, fileName, 1);
+        VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, 1);
         //zapis do Bazy w inny wątku
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
 
@@ -120,5 +123,17 @@ public class VoiceMessageActivity extends AppCompatActivity {
         return voiceMessageFile;
     }
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LocationService.MyBinder binder = (LocationService.MyBinder) iBinder;
+            locationService = binder.getLocationService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            locationService = null;
+        }
+    };
 
 }
