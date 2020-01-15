@@ -11,15 +11,21 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import logic.DatabaseClient;
+import logic.Description;
+import logic.LocationPoint;
 
 public class LocationService extends Service {
+    private static final String TAG = "LocationService";
     private double gpsX;
     private double gpsY;
     private final IBinder binder = new MyBinder();
+    private boolean isRecording = false;
 
     public double getGpsX() {
         return gpsX;
@@ -27,6 +33,10 @@ public class LocationService extends Service {
 
     public double getGpsY() {
         return gpsY;
+    }
+
+    public void setRecording(boolean recording) {
+        isRecording = recording;
     }
 
     @Override
@@ -40,7 +50,13 @@ public class LocationService extends Service {
             public void onLocationChanged(Location location) {
                 gpsX = location.getLatitude();
                 gpsY = location.getLongitude();
-             //   Toast.makeText(getApplicationContext(), "gpsX: " + gpsX + " gpsY: " + gpsY, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "isRecording = " + isRecording);
+                if(isRecording == true){
+                    LocationPoint locationPoint = new LocationPoint(gpsX, gpsY, 1); //utworzenie obiektu
+                    DatabaseClient.getInstance(getApplicationContext()).savePointToDb(locationPoint);     //dodanie punktu do bazy
+                    Toast.makeText(getApplicationContext(), "gpsX: " + gpsX + " gpsY: " + gpsY, Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override

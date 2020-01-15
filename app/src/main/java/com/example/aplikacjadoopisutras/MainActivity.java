@@ -162,11 +162,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onClickBtnUpdate(View view){
+    public void onClickBtnUpdate(View view) {
 
         textGpsX.setText(Double.toString(locationService.getGpsX()));
         textGpsY.setText(Double.toString(locationService.getGpsY()));
 
+    }
+
+    public void onClickBtnStartRecordingRoute(View view) {
+        locationService.setRecording(true);
+    }
+
+    public void onClickBtnStopRecordingRoute(View view) {
+        locationService.setRecording(false);
     }
 
     //metoda odpowiedzialna za nazwę pliku do zapisu

@@ -47,6 +47,10 @@ public class DatabaseClient {
                 VoiceMessage voiceMessage = (VoiceMessage) points[0];
                 DatabaseClient.getInstance(mCtx).getAppDatabase().voiceMessageDao().insert(voiceMessage);
             }
+            if(points[0] instanceof LocationPoint){
+                LocationPoint locationPoint = (LocationPoint) points[0];
+                DatabaseClient.getInstance(mCtx).getAppDatabase().locationDao().insert(locationPoint);
+            }
             return null;
         }
     }
