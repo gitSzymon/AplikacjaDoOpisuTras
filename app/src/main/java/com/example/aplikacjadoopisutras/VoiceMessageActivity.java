@@ -1,6 +1,7 @@
 package com.example.aplikacjadoopisutras;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaRecorder;
@@ -77,6 +78,9 @@ public class VoiceMessageActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
+
+        Intent intent = new Intent(this, LocationService.class);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
     }
 

@@ -51,7 +51,7 @@ public class LocationService extends Service {
                 gpsX = location.getLatitude();
                 gpsY = location.getLongitude();
                 Log.d(TAG, "isRecording = " + isRecording);
-                if(isRecording == true){
+                if(isRecording){
                     LocationPoint locationPoint = new LocationPoint(gpsX, gpsY, 1); //utworzenie obiektu
                     DatabaseClient.getInstance(getApplicationContext()).savePointToDb(locationPoint);     //dodanie punktu do bazy
                     Toast.makeText(getApplicationContext(), "gpsX: " + gpsX + " gpsY: " + gpsY, Toast.LENGTH_SHORT).show();

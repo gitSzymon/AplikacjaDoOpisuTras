@@ -4,11 +4,13 @@ package com.example.aplikacjadoopisutras;
 import androidx.fragment.app.FragmentActivity;
 import logic.DatabaseClient;
 import logic.Description;
+import logic.LocationPoint;
 import logic.Photo;
 import logic.Point;
 import logic.VoiceMessage;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         if (p instanceof Photo) {
             Intent intent = new Intent(getApplicationContext(), ImageViewActivity.class);
-            intent.putExtra( "fileName", (Photo) p);
+            intent.putExtra("fileName", (Photo) p);
             startActivity(intent);
 
         }
@@ -119,9 +123,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .voiceMessageDao()
                         .getVoiceMessages();
 
+                List<LocationPoint> locationList = DatabaseClient
+                        .getInstance(getApplicationContext())
+                        .getAppDatabase()
+                        .locationDao()
+                        .getLocation();
+
                 tmp.addAll(photoList);
                 tmp.addAll(descriptionsList);
                 tmp.addAll(voiceMessageList);
+                tmp.addAll(locationList);
 
 
                 return tmp;
@@ -132,36 +143,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             protected void onPostExecute(ArrayList<Point> pointList) {
 
                 LatLng point = null;
+                Polyline line;
+                PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
                 float zoomLevel = (float) 15.0;
                 super.onPostExecute(pointList);
                 // Add a markers
                 for (int i = 0; i < pointList.size(); i++) {
                     point = new LatLng(pointList.get(i).getGpsX(), pointList.get(i).getGpsY());
                     MarkerOptions markerOpt = new MarkerOptions();
+                    Point p = pointList.get(i);
 
                     if (pointList.get(i) instanceof Description) {
                         markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
                         markerOpt.position(point).title(((Description) pointList.get(i)).getDescription());
+                        marker = mMap.addMarker(markerOpt);
+                        marker.setTag(p);
                     }
                     if (pointList.get(i) instanceof Photo) {
                         markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                         markerOpt.position(point).title("Fotosek " + i);
+                        marker = mMap.addMarker(markerOpt);
+                        marker.setTag(p);
                     }
                     if (pointList.get(i) instanceof VoiceMessage) {
-                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                         markerOpt.position(point).title("Głosówka " + i);
+                        marker = mMap.addMarker(markerOpt);
+                        marker.setTag(p);
+                    }
+                    if (pointList.get(i) instanceof LocationPoint) {
+                        options.add(point);
                     }
 
-                    marker = mMap.addMarker(markerOpt);
-                    Point p = pointList.get(i);
-                    marker.setTag(p);
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
-                          mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); //Nie działa na starym LG
+
+                line = mMap.addPolyline(options);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); //Nie działa na starym LG
             }
         }
 
         GetMapPoints getPoint = new GetMapPoints();
         getPoint.execute();
+
     }
 }

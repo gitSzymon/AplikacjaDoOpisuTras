@@ -29,6 +29,9 @@ public class LocationPoint extends Point{
         @Query("SELECT * FROM locations")
         List<LocationPoint> getLocation();
 
+      //  @Query("SELECT * FROM locations WHERE routeId = routeId")
+      //  List<LocationPoint> xLocation(int routeId);
+
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         long insert(LocationPoint locationPoint);
 
