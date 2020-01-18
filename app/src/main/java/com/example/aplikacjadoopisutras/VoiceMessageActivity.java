@@ -35,7 +35,7 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
     private LocationService locationService;
     MediaRecorder recorder = null;
-    String fileName="";
+    String fileName = "";
     final String LOG_TAG = "AudioRecordTest";
 
     // private TextView txtMessage;
@@ -50,9 +50,9 @@ public class VoiceMessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_message);
 
-        btnStart = (Button)findViewById(R.id.btnStart);
-        btnStop = (Button)findViewById(R.id.btnStop);
-        btnPauza = (Button)findViewById(R.id.btnPauza);
+        btnStart = (Button) findViewById(R.id.btnStart);
+        btnStop = (Button) findViewById(R.id.btnStop);
+        btnPauza = (Button) findViewById(R.id.btnPauza);
 
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
@@ -84,7 +84,7 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
     }
 
-    public void onClickButtonStart(View view){
+    public void onClickButtonStart(View view) {
 
         recorder.start();
         Toast.makeText(getApplicationContext(), "Jaaaazda", Toast.LENGTH_SHORT).show();
@@ -92,19 +92,19 @@ public class VoiceMessageActivity extends AppCompatActivity {
         btnStop.setEnabled(true);
     }
 
-    public void onClickButtonPauza(View view){
+    public void onClickButtonPauza(View view) {
 
     }
 
 
-    public void onClickButtonStop(View view){
+    public void onClickButtonStop(View view) {
 
         recorder.stop();
         recorder.reset();
         recorder.release();
         recorder = null;
 
-        VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, 1);
+        VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, MainActivity.currentRouteId);
         //zapis do Bazy w inny wątku
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
 

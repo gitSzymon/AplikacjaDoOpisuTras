@@ -42,6 +42,12 @@ public class Route {
         @Query("SELECT routeId FROM routes WHERE routeName=:name")
         int findRouteIdByName(String name);
 
+        @Query("SELECT COUNT (*) FROM routes")
+        int getRoutesCount();
+
+        @Query("SELECT routeId FROM routes")
+        List<Integer> getRouteIdFromDb();
+
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         long insert(Route route);
 

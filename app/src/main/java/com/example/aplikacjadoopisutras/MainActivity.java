@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickBtnStartRecordingRoute(View view) {
+        locationService.setRouteId(currentRouteId);
         locationService.setRecording(true);
     }
 
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
             if (resultCode == RESULT_OK) {
                 //utworzenie obiektu photo i zapisanie do bazy
-                Photo photo = new Photo(locationService.getGpsX(), locationService.getGpsY(), currentImagePath, 1);
+                Photo photo = new Photo(locationService.getGpsX(), locationService.getGpsY(), currentImagePath, currentRouteId);
                 //zapis do Bazy w inny wątku
                 DatabaseClient.getInstance(getApplicationContext()).savePointToDb(photo);
 

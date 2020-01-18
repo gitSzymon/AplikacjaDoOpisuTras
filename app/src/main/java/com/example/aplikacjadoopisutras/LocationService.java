@@ -26,6 +26,7 @@ public class LocationService extends Service {
     private double gpsY;
     private final IBinder binder = new MyBinder();
     private boolean isRecording = false;
+    private int routeId = 0;
 
     public double getGpsX() {
         return gpsX;
@@ -37,6 +38,10 @@ public class LocationService extends Service {
 
     public void setRecording(boolean recording) {
         isRecording = recording;
+    }
+
+    public void setRouteId(int routeId) {
+        this.routeId = routeId;
     }
 
     @Override
@@ -51,8 +56,8 @@ public class LocationService extends Service {
                 gpsX = location.getLatitude();
                 gpsY = location.getLongitude();
                 Log.d(TAG, "isRecording = " + isRecording);
-                if(isRecording){
-                    LocationPoint locationPoint = new LocationPoint(gpsX, gpsY, 1); //utworzenie obiektu
+                if (isRecording) {
+                    LocationPoint locationPoint = new LocationPoint(gpsX, gpsY, routeId); //utworzenie obiektu
                     DatabaseClient.getInstance(getApplicationContext()).savePointToDb(locationPoint);     //dodanie punktu do bazy
                     Toast.makeText(getApplicationContext(), "gpsX: " + gpsX + " gpsY: " + gpsY, Toast.LENGTH_SHORT).show();
                 }
@@ -99,8 +104,8 @@ public class LocationService extends Service {
         return binder;
     }
 
-    public class MyBinder extends Binder{
-        LocationService getLocationService(){
+    public class MyBinder extends Binder {
+        LocationService getLocationService() {
             return LocationService.this;
         }
     }

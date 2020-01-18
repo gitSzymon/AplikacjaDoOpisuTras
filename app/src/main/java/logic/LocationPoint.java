@@ -17,7 +17,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 @Entity(tableName = "locations")
-public class LocationPoint extends Point{
+public class LocationPoint extends Point {
 
     public LocationPoint(double gpsX, double gpsY, int routeId) {
         super(gpsX, gpsY);
@@ -29,8 +29,8 @@ public class LocationPoint extends Point{
         @Query("SELECT * FROM locations")
         List<LocationPoint> getLocation();
 
-      //  @Query("SELECT * FROM locations WHERE routeId = routeId")
-      //  List<LocationPoint> xLocation(int routeId);
+        @Query("SELECT * FROM locations WHERE routeId =:routeId")
+        List<LocationPoint> getLocationsByRouteId(int routeId);
 
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         long insert(LocationPoint locationPoint);

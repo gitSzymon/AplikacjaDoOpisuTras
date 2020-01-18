@@ -39,7 +39,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private Marker marker;
     private MediaPlayer player = null;
+    private static ArrayList<PolylineOptions> optionsList = new ArrayList<>();
 
+    public static void setOptionsList(PolylineOptions polylineOption) {
+        optionsList.add(polylineOption);
+    }
+
+    public static ArrayList<PolylineOptions> getOptionsList() {
+        return optionsList;
+    }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -135,6 +143,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 tmp.addAll(locationList);
 
 
+                // odczyt id wszystkich tras
+                List<Integer> listRoutesId = DatabaseClient
+                        .getInstance(getApplicationContext())
+                        .getAppDatabase()
+                        .routeDao()
+                        .getRouteIdFromDb();
+
+                // petla po wszystkich trasach
+                for (Integer i : listRoutesId) {
+                    PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+                    List<LocationPoint> lp = DatabaseClient
+                            .getInstance(getApplicationContext())
+                            .getAppDatabase()
+                            .locationDao()
+                            .getLocationsByRouteId(i);
+                    //petla po wszystkich LocationPoin i-tej trasy
+                    for (LocationPoint j : lp) {
+                        LatLng lt = new LatLng(j.getGpsX(), j.getGpsY());
+                        options.add(lt);
+                    }
+                    MapsActivity.setOptionsList(options);
+
+                }
+
+
+//    mMap.addPolyline(options);
+
+
                 return tmp;
             }
 
@@ -144,7 +180,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 LatLng point = null;
                 Polyline line;
-                PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
                 float zoomLevel = (float) 15.0;
                 super.onPostExecute(pointList);
                 // Add a markers
@@ -171,20 +206,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         marker = mMap.addMarker(markerOpt);
                         marker.setTag(p);
                     }
-                    if (pointList.get(i) instanceof LocationPoint) {
-                        options.add(point);
-                    }
+                    //    if (pointList.get(i) instanceof LocationPoint) {
+                    //        options.add(point);
+                    //    }
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
 
-                line = mMap.addPolyline(options);
+
+                for (PolylineOptions i : MapsActivity.getOptionsList()) {
+                    mMap.addPolyline(i);
+                }
+
+                //      mMap.addPolyline(MapsActivity.getOptionsList().get(1));
+
+                if (point == null) {
+                    point = new LatLng(51.757, 19.458);
+                    zoomLevel = 10;
+                }
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); //Nie działa na starym LG
             }
         }
 
         GetMapPoints getPoint = new GetMapPoints();
         getPoint.execute();
+
+
+        Polyline line = mMap.addPolyline(new PolylineOptions()
+                .add(new LatLng(51.5, 19), new LatLng(52, 20))
+                .width(10)
+                .color(Color.RED));
+
+        Polyline line1 = mMap.addPolyline(new PolylineOptions()
+                .add(new LatLng(51.7, 19.5), new LatLng(52.2, 20.1))
+                .width(10)
+                .color(Color.YELLOW));
 
     }
 }
