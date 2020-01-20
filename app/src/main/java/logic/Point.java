@@ -31,6 +31,11 @@ public abstract class Point {
     //      return pointId;
     //  }
 
+
+    public int getRouteId() {
+        return routeId;
+    }
+
     public double getGpsX() {
         return gpsX;
     }
