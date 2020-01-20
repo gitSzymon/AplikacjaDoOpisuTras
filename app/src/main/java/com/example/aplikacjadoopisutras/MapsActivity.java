@@ -40,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker marker;
     private MediaPlayer player = null;
     private static ArrayList<PolylineOptions> optionsList = new ArrayList<>();
+    private static ArrayList<Integer> routesToDraw = new ArrayList<>();
 
     public static void setOptionsList(PolylineOptions polylineOption) {
         optionsList.add(polylineOption);
@@ -47,6 +48,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public static ArrayList<PolylineOptions> getOptionsList() {
         return optionsList;
+    }
+
+    public static ArrayList<Integer> getRoutesToDraw() {
+        return routesToDraw;
+    }
+
+    public static void setRoutesToDraw(ArrayList<Integer> routesToDraw) {
+        MapsActivity.routesToDraw = routesToDraw;
     }
 
     @Override
@@ -88,6 +97,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        routesToDraw.add(1);
+        routesToDraw.add(2);
+    //    routesToDraw.add(3);
 
     }
 
@@ -163,8 +175,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         LatLng lt = new LatLng(j.getGpsX(), j.getGpsY());
                         options.add(lt);
                     }
-                    MapsActivity.setOptionsList(options);
-
+                    for(Integer k: routesToDraw) {
+                        if(i == k){
+                            MapsActivity.setOptionsList(options);
+                        }
+                    }
                 }
 
 
@@ -187,38 +202,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     point = new LatLng(pointList.get(i).getGpsX(), pointList.get(i).getGpsY());
                     MarkerOptions markerOpt = new MarkerOptions();
                     Point p = pointList.get(i);
-
-                    if (pointList.get(i) instanceof Description) {
-                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                        markerOpt.position(point).title(((Description) pointList.get(i)).getDescription());
-                        marker = mMap.addMarker(markerOpt);
-                        marker.setTag(p);
+                    for (Integer j : routesToDraw) {
+                        if (p.getRouteId() == j) {
+                            //rysowanie punktów jeśli routeId jest takie jak podał użytkownik
+                            //(na liście routesToDraw
+                            if (pointList.get(i) instanceof Description) {
+                                markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                                markerOpt.position(point).title(((Description) pointList.get(i)).getDescription());
+                                marker = mMap.addMarker(markerOpt);
+                                marker.setTag(p);
+                            }
+                            if (pointList.get(i) instanceof Photo) {
+                                markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                                markerOpt.position(point).title("Fotosek " + i);
+                                marker = mMap.addMarker(markerOpt);
+                                marker.setTag(p);
+                            }
+                            if (pointList.get(i) instanceof VoiceMessage) {
+                                markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                                markerOpt.position(point).title("Głosówka " + i);
+                                marker = mMap.addMarker(markerOpt);
+                                marker.setTag(p);
+                            }
+                     //       if (pointList.get(i) instanceof LocationPoint) {
+                     //           options.add(point);
+                     //       }
+                        }
                     }
-                    if (pointList.get(i) instanceof Photo) {
-                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                        markerOpt.position(point).title("Fotosek " + i);
-                        marker = mMap.addMarker(markerOpt);
-                        marker.setTag(p);
-                    }
-                    if (pointList.get(i) instanceof VoiceMessage) {
-                        markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                        markerOpt.position(point).title("Głosówka " + i);
-                        marker = mMap.addMarker(markerOpt);
-                        marker.setTag(p);
-                    }
-                    //    if (pointList.get(i) instanceof LocationPoint) {
-                    //        options.add(point);
-                    //    }
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
 
 
+                //rysowanie punktów lokalizacyjnych
                 for (PolylineOptions i : MapsActivity.getOptionsList()) {
-                    mMap.addPolyline(i);
+                            mMap.addPolyline(i);
                 }
 
-                //      mMap.addPolyline(MapsActivity.getOptionsList().get(1));
+                //mMap.addPolyline(MapsActivity.getOptionsList().get(1));
 
                 if (point == null) {
                     point = new LatLng(51.757, 19.458);
@@ -230,17 +251,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         GetMapPoints getPoint = new GetMapPoints();
         getPoint.execute();
-
-
-        Polyline line = mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(51.5, 19), new LatLng(52, 20))
-                .width(10)
-                .color(Color.RED));
-
-        Polyline line1 = mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(51.7, 19.5), new LatLng(52.2, 20.1))
-                .width(10)
-                .color(Color.YELLOW));
 
     }
 }
