@@ -6,4 +6,81 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity" />
+    tools:context=".MapsActivity" >
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="20dp"
+        android:onClick="onClickBtnPlus"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="+"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="60dp"
+        android:onClick="onClickBtnMinus"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="-"/>
+    <Button
+        android:id="@+id/btnNowaTrasa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="100dp"
+        android:onClick="onClickBtnNowaTrasa"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="Nowa trasa"/>
+    <Button
+        android:id="@+id/btnStopRecordingRoute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="140dp"
+        android:onClick="onClickBtnStopRecording"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/stop_recording"/>
+    <Button
+        android:id="@+id/btnAddMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="180dp"
+        android:onClick="onClickBtnAddMessage"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/add_message"/>
+    <Button
+        android:id="@+id/btnAddPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="220dp"
+        android:onClick="onClickBtnAddPhoto"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/add_photo"/>
+    <Button
+        android:id="@+id/btnAddVoiceMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="260dp"
+        android:onClick="onClickBtnAddVoiceMessage"
+        android:padding="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/add_voice_message"/>
+
+    <TextView
+        android:id="@+id/routeName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Aktualna nazwa trasy: " />
+
+</fragment>

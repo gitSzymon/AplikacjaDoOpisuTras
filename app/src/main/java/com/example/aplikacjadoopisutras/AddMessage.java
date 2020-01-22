@@ -57,11 +57,11 @@ public class AddMessage extends AppCompatActivity {
             return;
         }
 
-        int tmpRouteId = MainActivity.currentRouteId;
+        int tmpRouteId = MapsActivity.currentRouteId;
         Description description = new Description(locationService.getGpsX(), locationService.getGpsY() ,txtMessage.getText().toString().trim(), tmpRouteId); //utworzenie obiektu
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(description);     //dodanie punktu do bazy
 
-        Intent intent = new Intent (getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent (getApplicationContext(), MapsActivity.class);
         startActivity(intent);
     }
 

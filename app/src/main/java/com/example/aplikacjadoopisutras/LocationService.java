@@ -26,6 +26,7 @@ public class LocationService extends Service {
     private double gpsY;
     private final IBinder binder = new MyBinder();
     private boolean isRecording = false;
+  //  public Boolean isChanging = false;
     private int routeId = 0;
 
     public double getGpsX() {
@@ -53,6 +54,7 @@ public class LocationService extends Service {
 
             @Override
             public void onLocationChanged(Location location) {
+   //             isChanging = true;
                 gpsX = location.getLatitude();
                 gpsY = location.getLongitude();
                 Log.d(TAG, "isRecording = " + isRecording);

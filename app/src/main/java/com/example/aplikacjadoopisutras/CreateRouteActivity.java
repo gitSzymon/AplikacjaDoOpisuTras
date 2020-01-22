@@ -19,7 +19,6 @@ import logic.Route;
 public class CreateRouteActivity extends AppCompatActivity {
 
     private TextView routeName;
-    private LocationService locationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,52 +37,35 @@ public class CreateRouteActivity extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent(this, LocationService.class);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        String name = routeName.getText().toString().trim();
+       // MapsActivity.currentRouteId = tmpId;
+        MapsActivity.currentRouteName = name;
 
-
-        class SaveDescription extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                String name = routeName.getText().toString().trim();
-                Route route = new Route(name); //utworzenie obiektu
-                DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().insert(route);     //dodanie trasy do bazy
-                int tmpId = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().findRouteIdByName(name);
-                locationService.setRouteId(tmpId);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);        //powrót do MainActivity
-                intent.putExtra("routeId", tmpId);
-                startActivity(intent);
-                return null;
-            }
-        }
 
         SaveDescription rd = new SaveDescription();
         rd.execute();
+
+        setResult(RESULT_OK);
+        finish();
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    class SaveDescription extends AsyncTask<Void, Void, Void> {
+        int tmpId;
         @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            LocationService.MyBinder binder = (LocationService.MyBinder) iBinder;
-            locationService = binder.getLocationService();
-        }
+        protected Void doInBackground(Void... voids) {
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            locationService = null;
+            String name = routeName.getText().toString().trim();
+            Route route = new Route(name); //utworzenie obiektu
+            DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().insert(route);     //dodanie trasy do bazy
+            tmpId = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().findRouteIdByName(name);    //odczytanie id, ktore nadala baza danych
+            MapsActivity.currentRouteId = tmpId;
+            return null;
         }
-    };
-
-//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-    //       startActivity(intent);
-//    }
+    }
 
     public void onClickBtnCancel(View view) {
-        Intent intent = new Intent(getApplicationContext(), StartActivity.class);
-        startActivity(intent);
+        setResult(RESULT_CANCELED);
+        finish();
     }
-
 
 }

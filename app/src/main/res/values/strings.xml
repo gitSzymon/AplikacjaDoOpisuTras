@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Aplikacja do opisu tras</string>
     <string name="txt_rozpocznij_trase">Rozpocznij trase</string>
+    <string name="stop_recording">Zakończ trase</string>
+    <string name="add_message">Dodaj wiadomość tekstową</string>
+    <string name="add_photo">Zrób zdjęcie</string>
+    <string name="add_voice_message">Dodaj wiadomość głosową</string>
 
 </resources>

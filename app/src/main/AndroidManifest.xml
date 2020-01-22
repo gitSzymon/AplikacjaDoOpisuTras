@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme">
         <service android:name=".LocationService"></service>
         <activity android:name=".ImageViewActivity"></activity>
-        <activity android:name=".StartActivity">
+        <activity android:name=".MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +32,7 @@
         <activity android:name=".PointListActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CreateRouteActivity" />
-        <activity android:name=".MapsActivity" />
+        <activity android:name=".StartActivity" />
         <activity android:name=".VoiceMessageActivity" />
 
         <provider

@@ -104,14 +104,14 @@ public class VoiceMessageActivity extends AppCompatActivity {
         recorder.release();
         recorder = null;
 
-        VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, MainActivity.currentRouteId);
+        VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, MapsActivity.currentRouteId);
         //zapis do Bazy w inny wątku
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
 
 
         Toast.makeText(getApplicationContext(), "Koniec", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
 
     }

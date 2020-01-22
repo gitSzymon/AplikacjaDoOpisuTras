@@ -47,12 +47,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView textGpsX, textGpsY;
     private Button addPhoto;
     public static int currentRouteId;
-    private LocationService locationService;
+
     public static double gpsX, gpsY;
-    String currentImagePath = null;
+
     private static final int IMAGE_REQUEST = 1; //camera intent
     int MY_PERMISSIONS_RECORD_AUDIO = 3;
-    File imageFile = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         textGpsX = (TextView) findViewById(R.id.textGpsX);
         textGpsY = (TextView) findViewById(R.id.textGpsY);
         textMain.setMovementMethod(new ScrollingMovementMethod());          //ustawienie scrollowania
-        addPhoto = (Button) findViewById(R.id.btnAddPhoto);
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         // mText = (TextView) findViewById(R.id.text);
 
         Intent intent = new Intent(this, LocationService.class);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+   //     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void onClickBtnPrintRoute(View view) {
@@ -110,123 +110,4 @@ public class MainActivity extends AppCompatActivity {
         GetDescription gd = new GetDescription();
         gd.execute();
     }
-
-    public void onClickBtnAddText(View view) {
-        Intent intent = new Intent(getApplicationContext(), AddMessage.class);
-        startActivity(intent);
-    }
-
-    public void onClickBtnAddVoiceText(View view) {
-
-        //Intent intent = new Intent(getApplicationContext(), PointListActivity.class);
-        //startActivity(intent);
-
-        Intent intent = new Intent(getApplicationContext(), VoiceMessageActivity.class);
-        startActivity(intent);
-
-        /*
-        Intent voiceRecorderIntent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-        if (voiceRecorderIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                voiceRecordFile = getVoiceRecordFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (voiceRecordFile != null) {
-                Uri imageUri = FileProvider.getUriForFile(this, "android.support.v4.content.FileProvider", voiceRecordFile);
-                voiceRecorderIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(voiceRecorderIntent, VOICE_REQUEST);
-            }
-        }
-
-*/
-
-
-    }
-
-    public void onClickBtnAddPhoto(View view) {
-
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                imageFile = getImageFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (imageFile != null) {
-                Uri imageUri = FileProvider.getUriForFile(this, "android.support.v4.content.FileProvider", imageFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(cameraIntent, IMAGE_REQUEST);
-            }
-        }
-
-    }
-
-    public void onClickBtnUpdate(View view) {
-
-        textGpsX.setText(Double.toString(locationService.getGpsX()));
-        textGpsY.setText(Double.toString(locationService.getGpsY()));
-
-    }
-
-    public void onClickBtnStartRecordingRoute(View view) {
-        locationService.setRouteId(currentRouteId);
-        locationService.setRecording(true);
-    }
-
-    public void onClickBtnStopRecordingRoute(View view) {
-        locationService.setRecording(false);
-    }
-
-    //metoda odpowiedzialna za nazwę pliku do zapisu
-    private File getImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMDD_HHmmss").format(new Date());
-        String imageName = "jpg_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir((Environment.DIRECTORY_PICTURES));
-        File imageFile = File.createTempFile(imageName, ".jpg", storageDir);
-        currentImagePath = imageFile.getAbsolutePath();
-        return imageFile;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // po powrotach z activity np. aparat
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
-            if (resultCode == RESULT_OK) {
-                //utworzenie obiektu photo i zapisanie do bazy
-                Photo photo = new Photo(locationService.getGpsX(), locationService.getGpsY(), currentImagePath, currentRouteId);
-                //zapis do Bazy w inny wątku
-                DatabaseClient.getInstance(getApplicationContext()).savePointToDb(photo);
-
-                Toast.makeText(getApplicationContext(), "Sukces", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), "Anulowano", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-    }
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            LocationService.MyBinder binder = (LocationService.MyBinder) iBinder;
-            locationService = binder.getLocationService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            locationService = null;
-        }
-    };
-
-    public int getCurrentRouteId() {
-        return currentRouteId;
-    }
-
-    public void setCurrentRouteId(int currentRouteId) {
-        this.currentRouteId = currentRouteId;
-    }
-
-
 }
