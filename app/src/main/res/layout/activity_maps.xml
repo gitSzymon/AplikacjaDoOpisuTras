@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity" >
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
         android:layout_gravity="right|top"
         android:layout_marginTop="20dp"
         android:onClick="onClickBtnPlus"
@@ -17,8 +17,8 @@
         android:paddingRight="10dp"
         android:text="+"/>
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
         android:layout_gravity="right|top"
         android:layout_marginTop="60dp"
         android:onClick="onClickBtnMinus"
@@ -27,54 +27,66 @@
         android:text="-"/>
     <Button
         android:id="@+id/btnNowaTrasa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|top"
         android:layout_marginTop="100dp"
         android:onClick="onClickBtnNowaTrasa"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         android:padding="10dp"
         android:paddingRight="10dp"
-        android:text="Nowa trasa"/>
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:drawableBottom="@drawable/start_recording_route"/>
     <Button
         android:id="@+id/btnStopRecordingRoute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|top"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="150dp"
         android:onClick="onClickBtnStopRecording"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         android:padding="10dp"
         android:paddingRight="10dp"
-        android:text="@string/stop_recording"/>
+        android:drawableTop="@drawable/stop_recording_route"/>
     <Button
         android:id="@+id/btnAddMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|top"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="200dp"
         android:onClick="onClickBtnAddMessage"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         android:padding="10dp"
         android:paddingRight="10dp"
-        android:text="@string/add_message"/>
+        android:drawableTop="@drawable/message"/>
     <Button
         android:id="@+id/btnAddPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|top"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="250dp"
         android:onClick="onClickBtnAddPhoto"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         android:padding="10dp"
         android:paddingRight="10dp"
-        android:text="@string/add_photo"/>
+        android:drawableTop="@drawable/photo"/>
     <Button
         android:id="@+id/btnAddVoiceMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="60dp"
         android:layout_gravity="right|top"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="300dp"
         android:onClick="onClickBtnAddVoiceMessage"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
         android:padding="10dp"
         android:paddingRight="10dp"
-        android:text="@string/add_voice_message"/>
+        android:drawableTop="@drawable/voice_message"/>
 
     <TextView
         android:id="@+id/routeName"

@@ -12,14 +12,6 @@
         android:text="START" />
 
     <Button
-        android:id="@+id/btnPauza"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_weight="1"
-        android:onClick="onClickButtonPauza"
-        android:text="PAUZA" />
-
-    <Button
         android:id="@+id/btnStop"
         android:layout_width="match_parent"
         android:layout_height="1dp"

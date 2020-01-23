@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddMessage" />
+        <activity android:name=".AddMessageActivity" />
         <activity android:name=".OneDescriptionActivity" />
         <activity android:name=".PointListActivity" />
         <activity android:name=".MainActivity" />

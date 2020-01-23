@@ -1,8 +1,5 @@
 package com.example.aplikacjadoopisutras;
 
-import androidx.appcompat.app.AppCompatActivity;
-import logic.Photo;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +8,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
+import androidx.appcompat.app.AppCompatActivity;
+import logic.Photo;
+import logic.Point;
 
 public class ImageViewActivity extends AppCompatActivity {
 
@@ -20,7 +19,6 @@ public class ImageViewActivity extends AppCompatActivity {
     private TextView textGpsX;
     private TextView textGpsY;
     private TextView textDate;
-
     private String fileName = "";
 
     @Override
@@ -42,7 +40,6 @@ public class ImageViewActivity extends AppCompatActivity {
         //teksty
         textGpsX.setText(" Gps X = " + Double.toString(p.getGpsX()));
         textGpsY.setText(" Gps Y = " + Double.toString(p.getGpsY()));
-        //textDate.setText(" Data: " + p.getDate().toString());
-
+        textDate.setText(" Data: " + p.getDate().toString());
     }
 }

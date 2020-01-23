@@ -21,10 +21,12 @@ public abstract class Point {
     double gpsY;    //współrzędna Y lokalizacji
 
     public Point(double gpsX, double gpsY) {
-        long timestamp = System.currentTimeMillis();
-        date = new Date(timestamp);
         this.gpsX = gpsX;
         this.gpsY = gpsY;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     //  public int getPointId() {
@@ -42,6 +44,10 @@ public abstract class Point {
 
     public double getGpsY() {
         return gpsY;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     @Override

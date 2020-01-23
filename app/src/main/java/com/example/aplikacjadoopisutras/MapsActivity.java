@@ -1,15 +1,14 @@
 /*TODO:
-1. Ikonki Buttonów
-2. Menu z Buttonami zamiast wyświetlania ich na mapie
+
 3. Zapisywanie tras do pliki .kml
 4. Pokazywanie wybranej trasy na mapie
-5. Aktywność klawiszy (wygaszanie kiedy nie są potrzebne)
 6. Ustawienie stringów w pliku string.xml (wyrzucenie hardcoded)
 7. Debuging zdalny (biblioteka internetowa crashlytics.com)
+8. Ustawić datę w szczegółach Photo
+
 */
 
 package com.example.aplikacjadoopisutras;
-
 
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
@@ -33,7 +32,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -83,7 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     File imageFile = null;
 
 
-
     public static void setOptionsList(PolylineOptions polylineOption) {
         optionsList.add(polylineOption);
     }
@@ -126,7 +123,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             string = "Voice: gpsx=" + ((VoiceMessage) p).getGpsX() + " gpsy= " + ((VoiceMessage) p).getGpsY();
         }
 
-
         Toast.makeText(this, string, Toast.LENGTH_LONG).show();
         return false;
     }
@@ -134,6 +130,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -152,16 +153,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         routesToDraw.add(1);
         routesToDraw.add(2);
 
-
-        Intent intent = new Intent(this, LocationService.class);
-        startService(intent);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-        //    //blokowanie klawisza startu nowej trasy, dopóki nie ma zmian w lokalizacji
-        //     if (locationService.isChanging == true) {
-        //         btnNowaTrasa.setEnabled(true);
-        //    }
-
     }
 
     @Override
@@ -178,6 +169,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 //utworzenie obiektu photo i zapisanie do bazy
                 Photo photo = new Photo(locationService.getGpsX(), locationService.getGpsY(), currentImagePath, currentRouteId);
+                long timestamp = System.currentTimeMillis();
+                Date date = new Date(timestamp);
+                photo.setDate(date);
+
                 //zapis do Bazy w inny wątku
                 DatabaseClient.getInstance(getApplicationContext()).savePointToDb(photo);
 
@@ -188,15 +183,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -238,7 +224,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 tmp.addAll(voiceMessageList);
                 tmp.addAll(locationList);
 
-
                 // odczyt id wszystkich tras
                 List<Integer> listRoutesId = DatabaseClient
                         .getInstance(getApplicationContext())
@@ -265,10 +250,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 }
-//    mMap.addPolyline(options);
                 return tmp;
             }
-
 
             @Override
             protected void onPostExecute(ArrayList<Point> pointList) {
@@ -284,7 +267,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     for (Integer j : routesToDraw) {
                         if (p.getRouteId() == j) {
                             //rysowanie punktów jeśli routeId jest takie jak podał użytkownik
-                            //(na liście routesToDraw
+                            //(na liście routesToDraw)
                             if (pointList.get(i) instanceof Description) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
                                 markerOpt.position(point).title(((Description) pointList.get(i)).getDescription());
@@ -303,22 +286,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }
-                            //       if (pointList.get(i) instanceof LocationPoint) {
-                            //           options.add(point);
-                            //       }
                         }
                     }
-
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
                 }
-
 
                 //rysowanie punktów lokalizacyjnych
                 for (PolylineOptions i : MapsActivity.getOptionsList()) {
                     mMap.addPolyline(i);
                 }
-
-                //mMap.addPolyline(MapsActivity.getOptionsList().get(1));
 
                 if (point == null) {
                     point = new LatLng(51.757, 19.458);
@@ -327,12 +303,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, zoomLevel)); //Nie działa na starym LG
             }
         }
-
         GetMapPoints getPoint = new GetMapPoints();
         getPoint.execute();
-
     }
-
 
     public void onClickBtnPlus(View view) {
         LatLng center = mMap.getProjection().getVisibleRegion().latLngBounds.getCenter();
@@ -349,6 +322,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onClickBtnNowaTrasa(View view) {
         btnNowaTrasa.setEnabled(false);
         btnStopRecording.setEnabled(true);
+        btnNowaTrasa.setVisibility(View.GONE);
+        btnAddMessage.setVisibility(View.VISIBLE);
+        btnAddPhoto.setVisibility(View.VISIBLE);
+        btnAddVoiceMessage.setVisibility(View.VISIBLE);
+        btnStopRecording.setVisibility(View.VISIBLE);
         Intent intent = new Intent(getApplicationContext(), CreateRouteActivity.class);
         startActivityForResult(intent, ROUTE_REQUEST);
     }
@@ -357,7 +335,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnStopRecording.setEnabled(false);
         btnNowaTrasa.setEnabled(true);
         locationService.setRecording(false);
-
+        btnNowaTrasa.setVisibility(View.VISIBLE);
+        btnAddMessage.setVisibility(View.GONE);
+        btnAddPhoto.setVisibility(View.GONE);
+        btnAddVoiceMessage.setVisibility(View.GONE);
+        btnStopRecording.setVisibility(View.GONE);
     }
 
     public void onClickBtnAddPhoto(View view) {
@@ -378,17 +360,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
     public void onClickBtnAddVoiceMessage(View view) {
         Intent intent = new Intent(getApplicationContext(), VoiceMessageActivity.class);
         startActivity(intent);
     }
 
     public void onClickBtnAddMessage(View view) {
-        Intent intent = new Intent(getApplicationContext(), AddMessage.class);
+        Intent intent = new Intent(getApplicationContext(), AddMessageActivity.class);
         startActivity(intent);
     }
-
 
     //metoda odpowiedzialna za nazwę pliku do zapisu
     private File getImageFile() throws IOException {
@@ -400,17 +380,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return imageFile;
     }
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LocationService.MyBinder binder = (LocationService.MyBinder) iBinder;
+            locationService = binder.getLocationService();
 
-        private ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                LocationService.MyBinder binder = (LocationService.MyBinder) iBinder;
-                locationService = binder.getLocationService();
+            if (locationService == null || locationService.isRecording() == false) {
+                btnNowaTrasa.setVisibility(View.VISIBLE);
+                btnStopRecording.setVisibility(View.GONE);
+                btnAddMessage.setVisibility(View.GONE);
+                btnAddPhoto.setVisibility(View.GONE);
+                btnAddVoiceMessage.setVisibility(View.GONE);
+            } else {
+                btnNowaTrasa.setVisibility(View.GONE);
+                btnStopRecording.setVisibility(View.VISIBLE);
+                btnAddMessage.setVisibility(View.VISIBLE);
+                btnAddPhoto.setVisibility(View.VISIBLE);
+                btnAddVoiceMessage.setVisibility(View.VISIBLE);
             }
+        }
 
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                locationService = null;
-            }
-        };
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            locationService = null;
+        }
+    };
+}

@@ -12,12 +12,10 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import logic.DatabaseClient;
-import logic.Description;
 import logic.LocationPoint;
 
 public class LocationService extends Service {
@@ -26,7 +24,6 @@ public class LocationService extends Service {
     private double gpsY;
     private final IBinder binder = new MyBinder();
     private boolean isRecording = false;
-  //  public Boolean isChanging = false;
     private int routeId = 0;
 
     public double getGpsX() {
@@ -45,25 +42,26 @@ public class LocationService extends Service {
         this.routeId = routeId;
     }
 
+    public boolean isRecording() {
+        return isRecording;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         LocationManager managerLocation = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener listenerLocation = new LocationListener() {
 
-
             @Override
             public void onLocationChanged(Location location) {
-   //             isChanging = true;
                 gpsX = location.getLatitude();
                 gpsY = location.getLongitude();
                 Log.d(TAG, "isRecording = " + isRecording);
                 if (isRecording) {
                     LocationPoint locationPoint = new LocationPoint(gpsX, gpsY, routeId); //utworzenie obiektu
                     DatabaseClient.getInstance(getApplicationContext()).savePointToDb(locationPoint);     //dodanie punktu do bazy
-                    Toast.makeText(getApplicationContext(), "gpsX: " + gpsX + " gpsY: " + gpsY, Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(getApplicationContext(), "gpsX: " + gpsX + " gpsY: " + gpsY, Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override

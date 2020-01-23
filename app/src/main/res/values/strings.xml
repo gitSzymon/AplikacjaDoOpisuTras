@@ -5,5 +5,7 @@
     <string name="add_message">Dodaj wiadomość tekstową</string>
     <string name="add_photo">Zrób zdjęcie</string>
     <string name="add_voice_message">Dodaj wiadomość głosową</string>
+    <string name="start_recording">Rozpoczęto nagrywanie</string>
+    <string name="finish_recording">Koniec nagrywania</string>
 
 </resources>

@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaRecorder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -21,10 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import logic.DatabaseClient;
-import logic.Description;
 import logic.VoiceMessage;
 
 public class VoiceMessageActivity extends AppCompatActivity {
@@ -38,12 +34,8 @@ public class VoiceMessageActivity extends AppCompatActivity {
     String fileName = "";
     final String LOG_TAG = "AudioRecordTest";
 
-    // private TextView txtMessage;
-
     private Button btnStart;
-    private Button btnPauza;
     private Button btnStop;
-    //  txtMessage = (TextView)findViewById((R.id.txtMessage));
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,14 +44,11 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
         btnStart = (Button) findViewById(R.id.btnStart);
         btnStop = (Button) findViewById(R.id.btnStop);
-        btnPauza = (Button) findViewById(R.id.btnPauza);
 
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
 
         fileName = getExternalFilesDir("").getAbsolutePath();
-        //fileName += "/hihi.mp3";
-
 
         try {
             fileName = getVoiceRecordFile().getAbsolutePath();
@@ -81,21 +70,15 @@ public class VoiceMessageActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, LocationService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
     }
 
     public void onClickButtonStart(View view) {
 
         recorder.start();
-        Toast.makeText(getApplicationContext(), "Jaaaazda", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.start_recording), Toast.LENGTH_SHORT).show();
         btnStart.setEnabled(false);
         btnStop.setEnabled(true);
     }
-
-    public void onClickButtonPauza(View view) {
-
-    }
-
 
     public void onClickButtonStop(View view) {
 
@@ -107,13 +90,10 @@ public class VoiceMessageActivity extends AppCompatActivity {
         VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, MapsActivity.currentRouteId);
         //zapis do Bazy w inny wątku
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
-
-
-        Toast.makeText(getApplicationContext(), "Koniec", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.finish_recording), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
-
     }
 
 

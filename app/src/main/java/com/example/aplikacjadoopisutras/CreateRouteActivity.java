@@ -1,19 +1,12 @@
 package com.example.aplikacjadoopisutras;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import logic.DatabaseClient;
-import logic.Description;
 import logic.Route;
 
 public class CreateRouteActivity extends AppCompatActivity {
@@ -38,7 +31,6 @@ public class CreateRouteActivity extends AppCompatActivity {
         }
 
         String name = routeName.getText().toString().trim();
-       // MapsActivity.currentRouteId = tmpId;
         MapsActivity.currentRouteName = name;
 
 
@@ -51,6 +43,7 @@ public class CreateRouteActivity extends AppCompatActivity {
 
     class SaveDescription extends AsyncTask<Void, Void, Void> {
         int tmpId;
+
         @Override
         protected Void doInBackground(Void... voids) {
 
