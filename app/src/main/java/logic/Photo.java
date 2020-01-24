@@ -4,8 +4,6 @@ package logic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -71,30 +69,29 @@ public class Photo extends Point implements Parcelable {
         dest.writeInt(routeId);
         dest.writeDouble(gpsX);
         dest.writeDouble(gpsY);
-        dest.writeString(date.toString());
+        dest.writeLong(date.getTime());
         dest.writeString(fileName);
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
 
         // Ta metoda odczytuje naszą klasę z obiektu typu Parcel.
-        // Najpierw odczytujemy poziom pokemona, potem imię a na końcu tworzymy go z powrotem z tych danych.
         @Override
         public Photo createFromParcel(Parcel in) {
             int pointId = in.readInt();
             int routeId = in.readInt();
             double gpsX = in.readDouble();
             double gpsY = in.readDouble();
-            String stringDate = in.readString();
+            //ustawienie daty na 1 stycznia 1970, zamiana daty na milisekundy od tego dnia
+            //następnie wpisanie prawidłowej daty do obiektu Photo
+            Date date = new Date(0);
+            Long longDate = in.readLong();
             String fileName = in.readString();
-            try {
-                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(stringDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            date.setTime(longDate);
 
-
-            return new Photo(gpsX, gpsY, fileName, routeId);
+            Photo photo = new Photo(gpsX, gpsY, fileName, routeId);
+            photo.setDate(date);
+            return photo;
         }
 
         // Ta metoda prealokuje tablicę dla elementów naszej klasy w przypadku, gdybyśmy wysyłali więcej niż jeden obiekt.

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import androidx.appcompat.app.AppCompatActivity;
 import logic.DatabaseClient;
 import logic.Route;
@@ -46,9 +48,9 @@ public class CreateRouteActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
             String name = routeName.getText().toString().trim();
             Route route = new Route(name); //utworzenie obiektu
+            route.setDate(new Date(System.currentTimeMillis()));
             DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().insert(route);     //dodanie trasy do bazy
             tmpId = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().routeDao().findRouteIdByName(name);    //odczytanie id, ktore nadala baza danych
             MapsActivity.currentRouteId = tmpId;

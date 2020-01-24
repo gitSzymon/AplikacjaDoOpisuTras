@@ -29,8 +29,6 @@ public class Route {
 
 
     public Route(String routeName) {
-        long timestamp = System.currentTimeMillis();
-        date = new Date(timestamp);
         this.routeName = routeName;
     }
 
@@ -61,6 +59,10 @@ public class Route {
 
     public void setRouteName(String routeName) {
         routeName = routeName;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public static ArrayList<Point> getPointArrayList() {

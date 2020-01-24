@@ -4,7 +4,8 @@
 4. Pokazywanie wybranej trasy na mapie
 6. Ustawienie stringów w pliku string.xml (wyrzucenie hardcoded)
 7. Debuging zdalny (biblioteka internetowa crashlytics.com)
-8. Ustawić datę w szczegółach Photo
+10. Ekran ustawień (jak często zapisywac lokalizację LocationPoint)
+11. Obsługa błędów przy zaniku sygnału GPS
 
 */
 
@@ -270,19 +271,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //(na liście routesToDraw)
                             if (pointList.get(i) instanceof Description) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                                markerOpt.position(point).title(((Description) pointList.get(i)).getDescription());
+                                markerOpt.position(point).title(pointList.get(i).getDate().toString() + ((Description) (pointList.get(i))).getDescription());
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }
                             if (pointList.get(i) instanceof Photo) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                                markerOpt.position(point).title("Fotosek " + i);
+                                markerOpt.position(point).title("Zdjęcie nr: " + i);
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }
                             if (pointList.get(i) instanceof VoiceMessage) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                                markerOpt.position(point).title("Głosówka " + i);
+                                markerOpt.position(point).title("Wiadomość głosowa nr: " + i + (pointList.get(i)).getDate().toString());
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }

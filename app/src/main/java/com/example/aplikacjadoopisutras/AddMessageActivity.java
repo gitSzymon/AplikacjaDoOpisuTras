@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Date;
+
 
 public class AddMessageActivity extends AppCompatActivity {
 
@@ -41,8 +43,11 @@ public class AddMessageActivity extends AppCompatActivity {
             return;
         }
 
+        Date date = new Date(System.currentTimeMillis());
+
         int tmpRouteId = MapsActivity.currentRouteId;
         Description description = new Description(locationService.getGpsX(), locationService.getGpsY(), txtMessage.getText().toString().trim(), tmpRouteId); //utworzenie obiektu
+        description.setDate(date);
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(description);     //dodanie punktu do bazy
 
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);

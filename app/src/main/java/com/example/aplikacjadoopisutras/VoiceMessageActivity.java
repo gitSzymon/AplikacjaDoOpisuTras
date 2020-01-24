@@ -87,7 +87,12 @@ public class VoiceMessageActivity extends AppCompatActivity {
         recorder.release();
         recorder = null;
 
+        Long timeStamp = System.currentTimeMillis();
+        Date date = new Date(timeStamp);
+
         VoiceMessage voiceMessage = new VoiceMessage(locationService.getGpsX(), locationService.getGpsY(), fileName, MapsActivity.currentRouteId);
+        voiceMessage.setDate(date);
+
         //zapis do Bazy w inny wątku
         DatabaseClient.getInstance(getApplicationContext()).savePointToDb(voiceMessage);
         Toast.makeText(getApplicationContext(), getString(R.string.finish_recording), Toast.LENGTH_SHORT).show();
