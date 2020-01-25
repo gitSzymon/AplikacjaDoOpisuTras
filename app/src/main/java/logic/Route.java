@@ -57,6 +57,10 @@ public class Route {
 
     }
 
+    public String getRouteName() {
+        return routeName;
+    }
+
     public void setRouteName(String routeName) {
         routeName = routeName;
     }

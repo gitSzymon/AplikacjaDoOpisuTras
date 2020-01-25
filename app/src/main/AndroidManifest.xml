@@ -18,8 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".LocationService"></service>
-        <activity android:name=".ImageViewActivity"></activity>
+
+        <service android:name=".LocationService" />
+
+        <activity android:name=".ImageViewActivity" />
         <activity android:name=".MapsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +31,7 @@
         </activity>
         <activity android:name=".AddMessageActivity" />
         <activity android:name=".OneDescriptionActivity" />
-        <activity android:name=".PointListActivity" />
+        <activity android:name=".SearchRouteActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CreateRouteActivity" />
         <activity android:name=".StartActivity" />

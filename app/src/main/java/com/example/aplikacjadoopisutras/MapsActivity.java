@@ -6,7 +6,9 @@
 7. Debuging zdalny (biblioteka internetowa crashlytics.com)
 10. Ekran ustawień (jak często zapisywac lokalizację LocationPoint)
 11. Obsługa błędów przy zaniku sygnału GPS
-
+12. Przyciski powrotów z różnych activity
+13. Ukrywanie markerów (np. wyświetlanie samych Photo)
+14. Usuwanie punktów i całych tras
 */
 
 package com.example.aplikacjadoopisutras;
@@ -68,7 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     float zoomLevel = (float) 15.0;
     private MediaPlayer player = null;
     private static ArrayList<PolylineOptions> optionsList = new ArrayList<>();
-    private static ArrayList<Integer> routesToDraw = new ArrayList<>();
+    private static ArrayList<Integer> routesToDraw = new ArrayList<>();     //ArrayLista id tras które mają być wyświetlane
     public static int currentRouteId;
     public static String currentRouteName;
     public static TextView routeName;
@@ -150,9 +152,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnAddVoiceMessage = (Button) findViewById(R.id.btnAddVoiceMessage);
         routeName.setText("Aktualna trasa: " + currentRouteName);
 
+       /*
         routesToDraw.add(0);
         routesToDraw.add(1);
         routesToDraw.add(2);
+
+        */
+
+
 
     }
 
@@ -368,6 +375,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onClickBtnAddMessage(View view) {
         Intent intent = new Intent(getApplicationContext(), AddMessageActivity.class);
+        startActivity(intent);
+    }
+
+    public void onClickBtnChooseRoutes(View view) {
+        Intent intent = new Intent(getApplicationContext(), SearchRouteActivity.class);
         startActivity(intent);
     }
 

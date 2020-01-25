@@ -13,45 +13,44 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import logic.DatabaseClient;
 import logic.Description;
+import logic.Route;
 
-public class PointListActivity extends AppCompatActivity implements PointListAdapter.ItemClickListener{
+public class SearchRouteActivity extends AppCompatActivity implements PointListAdapter.ItemClickListener{
 
     PointListAdapter adapter;
-    ArrayList<String> pointDescriptions = new ArrayList<>();
+    ArrayList<String> routeNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_point_list);
+        setContentView(R.layout.activity_search_route);
 
         // data to populate the RecyclerView with
-        class GetDescription extends AsyncTask<Void, Void, List<Description>> {
+        class GetDescription extends AsyncTask<Void, Void, List<Route>> {
 
             @Override
-            protected List<Description> doInBackground(Void... voids) {
+            protected List<Route> doInBackground(Void... voids) {
                 //odczytanie danych z bazy
-                List<Description> descriptionsList = DatabaseClient
+                List<Route> routeList = DatabaseClient
                         .getInstance(getApplicationContext())
                         .getAppDatabase()
-                        .userDao()
-                        .getDescriptions();
-                return descriptionsList;
+                        .routeDao()
+                        .getRoutes();
+                return routeList;
             }
 
             @Override
-            protected void onPostExecute(List<Description> descriptionList) {
+            protected void onPostExecute(List<Route> routeList) {
                 //wpisanie danych z bazy do stringa i do UI
-                super.onPostExecute(descriptionList);
-                for(int i=0; i<descriptionList.size(); i++){
-                  //  animalNames.add(descriptionList.get(i).toString());
-                    pointDescriptions.add(descriptionList.get(i).getDescription());
-
+                super.onPostExecute(routeList);
+                for(int i=0; i<routeList.size(); i++){
+                    routeNames.add(routeList.get(i).getRouteName());
                 }
                 // set up the RecyclerView
                 RecyclerView recyclerView = findViewById(R.id.pointList);
-                recyclerView.setLayoutManager(new LinearLayoutManager(PointListActivity.this));
-                adapter = new PointListAdapter(PointListActivity.this, pointDescriptions);
-                adapter.setClickListener(PointListActivity.this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(SearchRouteActivity.this));
+                adapter = new PointListAdapter(SearchRouteActivity.this, routeNames);
+                adapter.setClickListener(SearchRouteActivity.this);
                 recyclerView.setAdapter(adapter);
             }
         }
