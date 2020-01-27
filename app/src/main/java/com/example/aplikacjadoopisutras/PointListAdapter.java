@@ -11,15 +11,16 @@ import com.example.aplikacjadoopisutras.R;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
+import logic.Route;
 
 public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private List<Route> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    PointListAdapter(Context context, List<String> data) {
+    PointListAdapter(Context context, List<Route> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -27,15 +28,21 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.row_layout, parent, false);
-        return new ViewHolder(view);
+        View v = mInflater.inflate(R.layout.list_item_route, parent, false);
+        //mInflater.inflate(R.layout.list_item_route, parent, false);
+        ViewHolder viewHolder = new ViewHolder(v);
+        viewHolder.textRouteId= v.findViewById(R.id.route_id);
+        viewHolder.textRouteName= v.findViewById(R.id.route_name);
+        return viewHolder;
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+        Route route = mData.get(position);
+        Integer tmp = new Integer(String.valueOf(route.getRouteId()));
+        ((ViewHolder) holder).textRouteId.setText(tmp);
+        ((ViewHolder) holder).textRouteName.setText(route.getRouteName());
     }
 
     // total number of rows
@@ -47,11 +54,13 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
+        TextView textRouteId;
+        TextView textRouteName;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.one_point);
+            textRouteId = itemView.findViewById(R.id.route_id);
+            textRouteName = itemView.findViewById(R.id.route_name);
             itemView.setOnClickListener(this);
         }
 
@@ -62,7 +71,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    Route getItem(int id) {
         return mData.get(id);
     }
 

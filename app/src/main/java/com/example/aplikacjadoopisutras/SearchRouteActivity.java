@@ -18,7 +18,7 @@ import logic.Route;
 public class SearchRouteActivity extends AppCompatActivity implements PointListAdapter.ItemClickListener{
 
     PointListAdapter adapter;
-    ArrayList<String> routeNames = new ArrayList<>();
+    ArrayList<Route> routeNames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
                 //wpisanie danych z bazy do stringa i do UI
                 super.onPostExecute(routeList);
                 for(int i=0; i<routeList.size(); i++){
-                    routeNames.add(routeList.get(i).getRouteName());
+                    routeNames.add(routeList.get(i));
                 }
                 // set up the RecyclerView
                 RecyclerView recyclerView = findViewById(R.id.pointList);

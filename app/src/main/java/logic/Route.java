@@ -19,7 +19,7 @@ import androidx.room.Update;
 public class Route {
 
     @PrimaryKey(autoGenerate = true)
-    int routeId;
+    private int routeId;
     private static ArrayList<Point> pointArrayList = new ArrayList<>();       //Arraylista miejsc
     private static ArrayList<Double> track = new ArrayList<>();                //ślad trasy (na razie tylko współrzędnych X)
     @ColumnInfo(name = "routeName")
@@ -59,6 +59,14 @@ public class Route {
 
     public String getRouteName() {
         return routeName;
+    }
+
+    public int getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(int routeId) {
+        this.routeId = routeId;
     }
 
     public void setRouteName(String routeName) {
