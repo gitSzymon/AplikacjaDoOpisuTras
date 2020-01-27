@@ -41,8 +41,10 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         Route route = mData.get(position);
         Integer tmp = new Integer(String.valueOf(route.getRouteId()));
-        ((ViewHolder) holder).textRouteId.setText(tmp);
-        ((ViewHolder) holder).textRouteName.setText(route.getRouteName());
+        TextView textRouteId = holder.textRouteId;
+        textRouteId.setText(tmp);
+       // ((ViewHolder) holder).textRouteId.setText(tmp);
+       // ((ViewHolder) holder).textRouteName.setText(route.getRouteName());
     }
 
     // total number of rows
