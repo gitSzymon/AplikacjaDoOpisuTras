@@ -31,8 +31,8 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         View v = mInflater.inflate(R.layout.list_item_route, parent, false);
         //mInflater.inflate(R.layout.list_item_route, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
-        viewHolder.textRouteId= v.findViewById(R.id.route_id);
-        viewHolder.textRouteName= v.findViewById(R.id.route_name);
+        viewHolder.textRouteId = v.findViewById(R.id.route_id);
+        viewHolder.textRouteName = v.findViewById(R.id.route_name);
         return viewHolder;
     }
 
@@ -40,11 +40,12 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Route route = mData.get(position);
-        Integer tmp = new Integer(String.valueOf(route.getRouteId()));
+
         TextView textRouteId = holder.textRouteId;
-        textRouteId.setText(tmp);
-       // ((ViewHolder) holder).textRouteId.setText(tmp);
-       // ((ViewHolder) holder).textRouteName.setText(route.getRouteName());
+        textRouteId.setText("Numer trasy: " + String.valueOf(route.getRouteId()));
+
+        TextView textRouteName = holder.textRouteName;
+        textRouteName.setText("Nazwa trasy: " + route.getRouteName());
     }
 
     // total number of rows
