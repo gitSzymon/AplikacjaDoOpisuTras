@@ -152,12 +152,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnAddVoiceMessage = (Button) findViewById(R.id.btnAddVoiceMessage);
         routeName.setText("Aktualna trasa: " + currentRouteName);
 
-       /*
+
         routesToDraw.add(0);
         routesToDraw.add(1);
         routesToDraw.add(2);
 
-        */
+
 
 
 
