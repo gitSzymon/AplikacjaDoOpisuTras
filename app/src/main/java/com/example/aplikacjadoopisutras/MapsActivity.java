@@ -1,14 +1,14 @@
 /*TODO:
 
 3. Zapisywanie tras do pliki .kml
-4. Pokazywanie wybranej trasy na mapie
 6. Ustawienie stringów w pliku string.xml (wyrzucenie hardcoded)
 7. Debuging zdalny (biblioteka internetowa crashlytics.com)
 10. Ekran ustawień (jak często zapisywac lokalizację LocationPoint)
 11. Obsługa błędów przy zaniku sygnału GPS
-12. Przyciski powrotów z różnych activity
 13. Ukrywanie markerów (np. wyświetlanie samych Photo)
 14. Usuwanie punktów i całych tras
+15. Do photo trzeba dodać nazwę trasy ( w photoActivity)
+
 */
 
 package com.example.aplikacjadoopisutras;
@@ -151,12 +151,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnAddMessage = (Button) findViewById(R.id.btnAddMessage);
         btnAddVoiceMessage = (Button) findViewById(R.id.btnAddVoiceMessage);
         routeName.setText("Aktualna trasa: " + currentRouteName);
-
-
-        routesToDraw.add(0);
-        routesToDraw.add(1);
-        routesToDraw.add(2);
-
 
     }
 

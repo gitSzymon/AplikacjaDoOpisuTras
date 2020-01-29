@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aplikacjadoopisutras.R;
 
@@ -33,12 +35,13 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         ViewHolder viewHolder = new ViewHolder(v);
         viewHolder.textRouteId = v.findViewById(R.id.route_id);
         viewHolder.textRouteName = v.findViewById(R.id.route_name);
+        viewHolder.showCheckBox = v.findViewById(R.id.checkBox);
         return viewHolder;
     }
 
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Route route = mData.get(position);
 
         TextView textRouteId = holder.textRouteId;
@@ -46,6 +49,34 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
         TextView textRouteName = holder.textRouteName;
         textRouteName.setText("Nazwa trasy: " + route.getRouteName());
+
+        final CheckBox checkBox = holder.showCheckBox;
+        int actualRouteId = mData.get(position).getRouteId();
+
+        //ustawienie checkboxa w pozycji ustawionej przez użytkownika (MapsActivity.routeToDraw)
+        checkBox.setChecked(false);
+        for (Integer i : MapsActivity.getRoutesToDraw()) {
+            if (i == actualRouteId) {
+                checkBox.setChecked(true);
+            }
+        }
+
+
+        holder.showCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Integer actualRouteId = mData.get(position).getRouteId();
+                if (checkBox.isChecked()) {
+                    MapsActivity.getRoutesToDraw().add(actualRouteId);
+                } else {
+                        int tmp = MapsActivity.getRoutesToDraw().indexOf(actualRouteId);
+                        MapsActivity.getRoutesToDraw().remove(tmp);
+                }
+                Toast.makeText(view.getContext(), "Route: ", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     // total number of rows
@@ -59,6 +90,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textRouteId;
         TextView textRouteName;
+        CheckBox showCheckBox;
 
         ViewHolder(View itemView) {
             super(itemView);
