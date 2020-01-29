@@ -1,5 +1,6 @@
 package com.example.aplikacjadoopisutras;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,7 @@ import logic.DatabaseClient;
 import logic.Description;
 import logic.Route;
 
-public class SearchRouteActivity extends AppCompatActivity implements PointListAdapter.ItemClickListener{
+public class SearchRouteActivity extends AppCompatActivity implements PointListAdapter.ItemClickListener {
 
     PointListAdapter adapter;
     ArrayList<Route> routeNames = new ArrayList<>();
@@ -43,7 +44,7 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
             protected void onPostExecute(List<Route> routeList) {
                 //wpisanie danych z bazy do stringa i do UI
                 super.onPostExecute(routeList);
-                for(int i=0; i<routeList.size(); i++){
+                for (int i = 0; i < routeList.size(); i++) {
                     routeNames.add(routeList.get(i));
                 }
                 // set up the RecyclerView
@@ -59,6 +60,15 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
         gd.execute();
 
 
+    }
+
+    public void onClickBtnOk(View view) {
+
+    }
+
+    public void onClickBtnCancel(View view) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -101,6 +101,10 @@ public class VoiceMessageActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onClickButtonCancel(View view) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
+    }
 
     //metoda odpowiedzialna za nazwę pliku do zapisu
     private File getVoiceRecordFile() throws IOException {

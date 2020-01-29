@@ -158,9 +158,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         routesToDraw.add(2);
 
 
-
-
-
     }
 
     @Override
@@ -170,8 +167,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // po powrotach z activity np. aparat
         if (requestCode == ROUTE_REQUEST) {
-            locationService.setRecording(true);
-            locationService.setRouteId(currentRouteId);
+            if (resultCode == RESULT_OK) {
+                btnNowaTrasa.setEnabled(false);
+                btnStopRecording.setEnabled(true);
+                btnNowaTrasa.setVisibility(View.GONE);
+                btnAddMessage.setVisibility(View.VISIBLE);
+                btnAddPhoto.setVisibility(View.VISIBLE);
+                btnAddVoiceMessage.setVisibility(View.VISIBLE);
+                btnStopRecording.setVisibility(View.VISIBLE);
+
+                locationService.setRecording(true);
+                locationService.setRouteId(currentRouteId);
+            }
         }
         if (requestCode == IMAGE_REQUEST) { //powrót z aparatu
             if (resultCode == RESULT_OK) {
@@ -328,13 +335,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void onClickBtnNowaTrasa(View view) {
-        btnNowaTrasa.setEnabled(false);
-        btnStopRecording.setEnabled(true);
-        btnNowaTrasa.setVisibility(View.GONE);
-        btnAddMessage.setVisibility(View.VISIBLE);
-        btnAddPhoto.setVisibility(View.VISIBLE);
-        btnAddVoiceMessage.setVisibility(View.VISIBLE);
-        btnStopRecording.setVisibility(View.VISIBLE);
         Intent intent = new Intent(getApplicationContext(), CreateRouteActivity.class);
         startActivityForResult(intent, ROUTE_REQUEST);
     }

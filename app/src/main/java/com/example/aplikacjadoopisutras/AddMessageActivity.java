@@ -35,7 +35,7 @@ public class AddMessageActivity extends AppCompatActivity {
         txtMessage = (TextView) findViewById((R.id.txtMessage));
     }
 
-    public void onClickBtnCancel(View view) {
+    public void onClickBtnSaveMessage(View view) {
 
         if (txtMessage.getText().toString().trim().isEmpty()) {
             txtMessage.setError("Nie dodałeś żadnej notatki!");
@@ -54,6 +54,12 @@ public class AddMessageActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onClickBtnCancel(View view) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
+    }
+
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -66,4 +72,6 @@ public class AddMessageActivity extends AppCompatActivity {
             locationService = null;
         }
     };
+
+
 }

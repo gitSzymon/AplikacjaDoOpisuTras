@@ -59,6 +59,7 @@ public class CreateRouteActivity extends AppCompatActivity {
     }
 
     public void onClickBtnCancel(View view) {
+
         setResult(RESULT_CANCELED);
         finish();
     }

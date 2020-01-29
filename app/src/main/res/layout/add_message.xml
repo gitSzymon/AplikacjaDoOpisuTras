@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="onClickBtnCancel"
+            android:onClick="onClickBtnSaveMessage"
             android:text="Zatwierdź notatkę" />
 
         <Button
@@ -36,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="onClickBtnCancel"
             android:text="Anuluj" />
 
     </LinearLayout>
