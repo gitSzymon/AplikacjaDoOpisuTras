@@ -35,6 +35,9 @@ public class Description extends Point {
         @Query("DELETE FROM descriptions WHERE routeId=:routeId")
         void delete(int routeId);
 
+        @Query("SELECT COUNT(*) FROM descriptions WHERE routeId=:routeId")
+        int count(int routeId);
+
     }
 
     public Description(double gpsX, double gpsY, String description, int routeId) {

@@ -40,6 +40,10 @@ public class Photo extends Point implements Parcelable {
         //kasowanie z bazy zdjęcia z danym routeId
         @Query("DELETE FROM photos WHERE routeId=:routeId")
         void delete(int routeId);
+
+
+        @Query("SELECT COUNT(*) FROM photos WHERE routeId=:routeId")
+        int count(int routeId);
     }
 
     public Photo(double gpsX, double gpsY, String fileName, int routeId) {

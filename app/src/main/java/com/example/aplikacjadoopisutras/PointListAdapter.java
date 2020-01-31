@@ -17,6 +17,7 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import androidx.recyclerview.widget.RecyclerView;
 import logic.DatabaseClient;
@@ -36,6 +37,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
     public static final int DELETE_VOICE = 2;
     public static final int DELETE_PHOTO = 3;
     public static final int DELETE_LOCATION_POINT = 4;
+    private boolean isSelectedAll;
 
 
     // data is passed into the constructor
@@ -55,6 +57,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         viewHolder.showCheckBox = v.findViewById(R.id.checkBox);
         viewHolder.btnDelete = v.findViewById(R.id.btn_delete);
         viewHolder.textDate = v.findViewById(R.id.txt_date);
+        viewHolder.txtStats = v.findViewById(R.id.txt_stats);
         return viewHolder;
     }
 
@@ -68,6 +71,12 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
 
         TextView textRouteName = holder.textRouteName;
         textRouteName.setText("Nazwa trasy: " + route.getRouteName());
+
+        //  TextView textStats = holder.txtStats;
+        //  textStats.setText("Stats: " + countPoint(route.getRouteId(), DELETE_DESCRIPTION, ));
+
+        if (!isSelectedAll) holder..select_item.setChecked(false);
+        else holder.select_item.setChecked(true);
 
         final CheckBox checkBox = holder.showCheckBox;
         int actualRouteId = mData.get(position).getRouteId();
@@ -139,12 +148,14 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         CheckBox showCheckBox;
         Button btnDelete;
         TextView textDate;
+        TextView txtStats;
 
         ViewHolder(View itemView) {
             super(itemView);
             textRouteId = itemView.findViewById(R.id.route_id);
             textRouteName = itemView.findViewById(R.id.route_name);
             textDate = itemView.findViewById(R.id.txt_date);
+            txtStats = itemView.findViewById(R.id.txt_stats);
             itemView.setOnClickListener(this);
         }
 
@@ -236,4 +247,66 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         dp.execute(routeId);
     }
 
+    public void selectAll() {
+        isSelectedAll = true;
+        notifyDataSetChanged();
+    }
+    
+/*
+    //policzenie punktów (LocationPoint, Message, VoiceMessage lub Photo) z bazy danych w oddzielnym wątku
+    public Integer countPoint(int routeId, final int objectToCount, final Context context) {
+
+        class CountPoint extends AsyncTask<Integer, Void, Integer> {
+
+            @Override
+            protected Integer doInBackground(Integer... routeId) {
+                //odczytanie danych z bazy
+                int count = 0;
+                if (objectToCount == DELETE_LOCATION_POINT) {
+                    count = DatabaseClient.getInstance(context)
+                            .getAppDatabase()
+                            .locationDao()
+                            .count(routeId[0]);
+                    return count;
+                }
+                if (objectToCount == DELETE_DESCRIPTION) {
+                    count = DatabaseClient.getInstance(context)
+                            .getAppDatabase()
+                            .userDao()
+                            .count(routeId[0]);
+                    return count;
+                }
+                if (objectToCount == DELETE_PHOTO) {
+                    count = DatabaseClient.getInstance(context)
+                            .getAppDatabase()
+                            .photoDao()
+                            .count(routeId[0]);
+                    return count;
+                }
+                if (objectToCount == DELETE_VOICE) {
+                    count = DatabaseClient.getInstance(context)
+                            .getAppDatabase()
+                            .voiceMessageDao()
+                            .count(routeId[0]);
+                    return count;
+                }
+
+                return count;
+            }
+
+        }
+
+        Integer count = 0;
+        CountPoint cp = new CountPoint();
+        cp.execute(routeId);
+        try {
+            count = cp.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+*/
 }

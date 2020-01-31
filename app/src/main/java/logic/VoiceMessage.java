@@ -35,6 +35,10 @@ public class VoiceMessage extends Point {
         //kasowanie z bazy wiadomości głosowej z danym routeId
         @Query("DELETE FROM voiceMessages WHERE routeId=:routeId")
         void delete(int routeId);
+
+
+        @Query("SELECT COUNT(*) FROM voiceMessages WHERE routeId=:routeId")
+        int count(int routeId);
     }
 
 

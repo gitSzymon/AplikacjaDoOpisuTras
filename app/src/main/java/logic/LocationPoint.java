@@ -44,5 +44,9 @@ public class LocationPoint extends Point {
         //kasowanie z bazy punktów śladu z danym routeId
         @Query("DELETE FROM locations WHERE routeId=:routeId")
         void delete(int routeId);
+
+
+        @Query("SELECT COUNT(*) FROM locations WHERE routeId=:routeId")
+        int count(int routeId);
     }
 }

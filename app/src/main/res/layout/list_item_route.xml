@@ -44,6 +44,15 @@
                     android:textSize="10dp"
                     android:text="data: " />
 
+
+                <!--Statystyka punktów trasy -->
+                <TextView
+                    android:id="@+id/txt_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp"
+                    android:text="Statystyki: " />
+
                 <TextView
                     android:id="@+id/route_name"
                     android:layout_width="wrap_content"
@@ -53,6 +62,8 @@
                     android:text="Android Version"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
                 <!-- android:textColor="#FFFFFF" -->
+
+
             </LinearLayout>
 
             <LinearLayout
