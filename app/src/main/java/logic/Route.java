@@ -65,6 +65,10 @@ public class Route {
         return routeId;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     public void setRouteId(int routeId) {
         this.routeId = routeId;
     }

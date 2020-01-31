@@ -37,6 +37,9 @@ public class Photo extends Point implements Parcelable {
         @Delete()
         void delete(Photo photo);
 
+        //kasowanie z bazy zdjęcia z danym routeId
+        @Query("DELETE FROM photos WHERE routeId=:routeId")
+        void delete(int routeId);
     }
 
     public Photo(double gpsX, double gpsY, String fileName, int routeId) {

@@ -31,6 +31,10 @@ public class Description extends Point {
         @Delete()
         void delete(Description description);
 
+        //kasowanie z bazy wiadomości tekstowej z danym routeId
+        @Query("DELETE FROM descriptions WHERE routeId=:routeId")
+        void delete(int routeId);
+
     }
 
     public Description(double gpsX, double gpsY, String description, int routeId) {

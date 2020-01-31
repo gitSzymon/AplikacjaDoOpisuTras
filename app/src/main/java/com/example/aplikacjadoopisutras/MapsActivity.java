@@ -1,6 +1,6 @@
 /*TODO:
 
-3. Zapisywanie tras do pliki .kml
+3. Zapisywanie tras do pliku .kml
 6. Ustawienie stringów w pliku string.xml (wyrzucenie hardcoded)
 7. Debuging zdalny (biblioteka internetowa crashlytics.com)
 10. Ekran ustawień (jak często zapisywac lokalizację LocationPoint)
@@ -8,6 +8,7 @@
 13. Ukrywanie markerów (np. wyświetlanie samych Photo)
 14. Usuwanie punktów i całych tras
 15. Do photo trzeba dodać nazwę trasy ( w photoActivity)
+16. Po anuluj na dyktafonie, zatrzymać nagranie jeśli było rozpoczęte
 
 */
 
@@ -279,19 +280,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //(na liście routesToDraw)
                             if (pointList.get(i) instanceof Description) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                                markerOpt.position(point).title(pointList.get(i).getDate().toString() + ((Description) (pointList.get(i))).getDescription());
+                                markerOpt.position(point).title("Id trasy: " + pointList.get(i).getRouteId() + "  " + pointList.get(i).getDate().toString() + ((Description) (pointList.get(i))).getDescription());
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }
                             if (pointList.get(i) instanceof Photo) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                                markerOpt.position(point).title("Zdjęcie nr: " + i);
+                                markerOpt.position(point).title("Zdjęcie nr: " + i + "  Id trasy: " + pointList.get(i).getRouteId());
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }
                             if (pointList.get(i) instanceof VoiceMessage) {
                                 markerOpt.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                                markerOpt.position(point).title("Wiadomość głosowa nr: " + i + (pointList.get(i)).getDate().toString());
+                                markerOpt.position(point).title("Wiadomość głosowa nr: " + i + "  Id trasy: " + pointList.get(i).getRouteId());
                                 marker = mMap.addMarker(markerOpt);
                                 marker.setTag(p);
                             }
