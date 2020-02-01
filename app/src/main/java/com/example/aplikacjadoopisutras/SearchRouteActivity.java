@@ -21,13 +21,13 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
 
     PointListAdapter adapter;
     ArrayList<Route> routeNames = new ArrayList<>();
-    CheckBox checkBoxSelectAll;
+    public static CheckBox checkBoxSelectAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_route);
-        checkBoxSelectAll = findViewById(R.id.checkBox);
+        checkBoxSelectAll = findViewById(R.id.checkBoxMarkAll);
 
         // data to populate the RecyclerView with
         class GetDescription extends AsyncTask<Void, Void, List<Route>> {
@@ -56,6 +56,15 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
                 adapter = new PointListAdapter(SearchRouteActivity.this, routeNames);
                 adapter.setClickListener(SearchRouteActivity.this);
                 recyclerView.setAdapter(adapter);
+
+                if(routeNames.size() == MapsActivity.getRoutesToDraw().size()){     // jeśli ilość tras w bazie jest taka sama jak ilość tras do narysowania
+                    checkBoxSelectAll.setChecked(true);
+                    adapter.selectAll(true);
+                }
+                else{
+                    checkBoxSelectAll.setChecked(false);
+                    adapter.selectAll(false);
+                }
             }
         }
 
@@ -76,8 +85,16 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
 
     public void onClickBtnMarked(View view) {
         MapsActivity.getRoutesToDraw().clear();
-
-        Toast.makeText(this,"Klikłeś w to :)", Toast.LENGTH_SHORT).show();
+        if (checkBoxSelectAll.isChecked()) {
+            for (Route r : routeNames) {
+                MapsActivity.getRoutesToDraw().add(r.getRouteId());
+            }
+            adapter.selectAll(true);
+            }
+        else{
+            MapsActivity.getRoutesToDraw().clear();
+            adapter.selectAll(false);
+        }
     }
 
     @Override

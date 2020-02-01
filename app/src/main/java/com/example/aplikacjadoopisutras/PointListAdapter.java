@@ -75,8 +75,8 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         //  TextView textStats = holder.txtStats;
         //  textStats.setText("Stats: " + countPoint(route.getRouteId(), DELETE_DESCRIPTION, ));
 
-        if (!isSelectedAll) holder..select_item.setChecked(false);
-        else holder.select_item.setChecked(true);
+        if (!isSelectedAll) holder.showCheckBox.setChecked(false);
+        else holder.showCheckBox.setChecked(true);
 
         final CheckBox checkBox = holder.showCheckBox;
         int actualRouteId = mData.get(position).getRouteId();
@@ -100,9 +100,17 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
             @Override
             //kliknięcie checkboxa "pokaż na mapie"
             public void onClick(View view) {
+                //odznaczanie checkboxa select all
+                SearchRouteActivity.checkBoxSelectAll.setChecked(false);
+                isSelectedAll = false;
                 Integer actualRouteId = mData.get(position).getRouteId();
                 if (checkBox.isChecked()) {
                     MapsActivity.getRoutesToDraw().add(actualRouteId);
+                    //sprawdzenie czy wszystkie checkboxy są zaznaczone i ustawienie checkbox all jeśli są
+                    if(mData.size() == MapsActivity.getRoutesToDraw().size()){
+                        selectAll(true);
+                        SearchRouteActivity.checkBoxSelectAll.setChecked(true);
+                    }
                 } else {
                     int tmp = MapsActivity.getRoutesToDraw().indexOf(actualRouteId);
                     MapsActivity.getRoutesToDraw().remove(tmp);
@@ -247,8 +255,8 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         dp.execute(routeId);
     }
 
-    public void selectAll() {
-        isSelectedAll = true;
+    public void selectAll(boolean select) {
+        isSelectedAll = select;
         notifyDataSetChanged();
     }
     
