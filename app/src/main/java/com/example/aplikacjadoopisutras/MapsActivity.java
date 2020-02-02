@@ -7,7 +7,7 @@
 11. Obsługa błędów przy zaniku sygnału GPS
 13. Ukrywanie markerów (np. wyświetlanie samych Photo)
 14. Usuwanie punktów
-15. Do photo trzeba dodać nazwę trasy ( w photoActivity)
+15. Do photo trzeba dodać nazwę trasy (w photoActivity)
 16. Po anuluj na dyktafonie, zatrzymać nagranie jeśli było rozpoczęte
 
 */
