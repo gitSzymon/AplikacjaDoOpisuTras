@@ -75,10 +75,6 @@ public class SearchRouteActivity extends AppCompatActivity implements PointListA
     }
 
     public void onClickBtnOk(View view) {
-
-    }
-
-    public void onClickBtnCancel(View view) {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         startActivity(intent);
     }
