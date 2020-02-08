@@ -72,8 +72,28 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
         TextView textRouteName = holder.textRouteName;
         textRouteName.setText("Nazwa trasy: " + route.getRouteName());
 
-        //  TextView textStats = holder.txtStats;
-        //  textStats.setText("Stats: " + countPoint(route.getRouteId(), DELETE_DESCRIPTION, ));
+        //statustyki na klawisze
+        TextView textStats = holder.txtStats;
+        int routeId = route.getRouteId();
+        int descCount = 0;
+        for (Description d : SearchRouteActivity.db.getDescriptions()) {
+            if (d.getRouteId() == routeId) descCount++;
+        }
+        int photoCount = 0;
+        for (Photo p : SearchRouteActivity.db.getPhotos()) {
+            if (p.getRouteId() == routeId) photoCount++;
+        }
+        int voiceCount = 0;
+        for (VoiceMessage v : SearchRouteActivity.db.getVoices()) {
+            if (v.getRouteId() == routeId) voiceCount++;
+        }
+        int locationCount = 0;
+        for (LocationPoint l : SearchRouteActivity.db.locations) {
+            if (l.getRouteId() == routeId) locationCount++;
+        }
+
+        textStats.setText("Stats: desc: " + descCount + " photo: " + photoCount + " voice: " + voiceCount + " loc: " + locationCount);
+
 
         if (!isSelectedAll) holder.showCheckBox.setChecked(false);
         else holder.showCheckBox.setChecked(true);
@@ -107,7 +127,7 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.View
                 if (checkBox.isChecked()) {
                     MapsActivity.getRoutesToDraw().add(actualRouteId);
                     //sprawdzenie czy wszystkie checkboxy są zaznaczone i ustawienie checkbox all jeśli są
-                    if(mData.size() == MapsActivity.getRoutesToDraw().size()){
+                    if (mData.size() == MapsActivity.getRoutesToDraw().size()) {
                         selectAll(true);
                         SearchRouteActivity.checkBoxSelectAll.setChecked(true);
                     }

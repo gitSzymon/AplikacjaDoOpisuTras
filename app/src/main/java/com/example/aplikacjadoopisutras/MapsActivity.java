@@ -71,6 +71,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     float zoomLevel = (float) 15.0;
     private MediaPlayer player = null;
     private static ArrayList<PolylineOptions> optionsList = new ArrayList<>();
+    private static ArrayList<Integer> optionsListRouteId = new ArrayList<>();
+
     private static ArrayList<Integer> routesToDraw = new ArrayList<>();     //ArrayLista id tras które mają być wyświetlane
     public static int currentRouteId;
     public static String currentRouteName;
@@ -243,22 +245,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 // petla po wszystkich trasach
                 for (Integer i : listRoutesId) {
-                    PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
                     List<LocationPoint> lp = DatabaseClient
                             .getInstance(getApplicationContext())
                             .getAppDatabase()
                             .locationDao()
                             .getLocationsByRouteId(i);
+
+                    PolylineOptions lineOpitons = new PolylineOptions();
+
                     //petla po wszystkich LocationPoin i-tej trasy
                     for (LocationPoint j : lp) {
                         LatLng lt = new LatLng(j.getGpsX(), j.getGpsY());
-                        options.add(lt);
+                        lineOpitons.getPoints().add(lt);
                     }
-                    for (Integer k : routesToDraw) {
-                        if (i == k) {
-                            MapsActivity.setOptionsList(options);
-                        }
-                    }
+                    optionsList.add(lineOpitons);
+                    optionsListRouteId.add(i);
                 }
                 return tmp;
             }
@@ -302,8 +303,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 //rysowanie punktów lokalizacyjnych
-                for (PolylineOptions i : MapsActivity.getOptionsList()) {
-                    mMap.addPolyline(i);
+                for (int i=0; i<MapsActivity.getOptionsList().size(); i++) {
+                    for(Integer k:routesToDraw) {
+                        if (optionsListRouteId.get(i) == k){//rysować
+                            line = mMap.addPolyline(optionsList.get(i));
+                        }
+                    }
                 }
 
                 if (point == null) {
@@ -414,4 +419,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             locationService = null;
         }
     };
+
 }
